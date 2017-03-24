@@ -1,0 +1,15 @@
+{
+  "name": "chatbot",
+  "version": "1.0.0",
+  "description": "TM Forum Catalyst Chat Bot",
+  "main": "app.js",
+  "scripts": {
+    "test": "test.js"
+  },
+  "author": "Atin Singh",
+  "license": "ISC",
+  "dependencies": {
+    "botbuilder": "^3.7.0",
+    "restify": "^4.3.0"
+  }
+}
