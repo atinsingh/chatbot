@@ -1,11 +1,10 @@
 const restify =  require('restify');
 const builder = require('botbuilder');
+const querystring = require("querystring");
 
 const config = require('./config.js');
 const users =   require("./appconfig.json");
 let model = 'https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/899a5581-0c98-4e96-a389-13a6080eabf8?subscription-key=9c2eaf8becea42ef9a98c0d7e22ffa65&verbose=true&q=';
-
-
 
 //Create a server
 
@@ -14,6 +13,8 @@ let port = process.env.port||process.env.PORT||3978;
 server.listen(port,()=>{
     console.log("Bot Server Started  at port %d ", port);
 });
+
+
 
 
 // Create Intital Chat Bot 
@@ -41,17 +42,33 @@ dialog.matches('MissedTechnician','/missedtechnician');
 
 dialog.matches('ScheduleTechnician','/schedule');
 
+dialog.onDefault(builder.DialogAction.send("I am sorry I don't understand your question, please try reprashe it"));
+
+
+
+
+
+/*
+ *  This should be called before, we begin our conversation
+ *  This function will will build a profile.
+ * 
+ * 
+ */  
+
+dialog.onBegin( (session, args, next) => {
+     if(!session.userData.accountNo){
+         session.beginDialog("/profile");
+     }
+});
+
+
+
+
+
+// Root Dialog for bot
 bot.dialog("/missedtechnician",[
-    (session,args,next)=>{
-         console.log(session);
-         if(!session.userData.accountNo){
-            session.beginDialog("/profile");
-        }else{
-            session.sendTyping();
-            next();
-        }
-    },
     (session,results,next)=>{
+        if(session.message.text)
         session.send("I am really sorry to hear that \
         , let me look into it",session.userData.name);
         session.sendTyping();
@@ -61,6 +78,7 @@ bot.dialog("/missedtechnician",[
             session.send("Apologies, I found that you had an appointment \
             on %s at %s but we failed as %s",schedule.appoitmentDate,schedule.appoitmentTime,schedule.issuetag);
             session.sendTyping();
+            session.send("We would like to offer you following to compensate ");
             next();
 
         }else{
@@ -70,33 +88,38 @@ bot.dialog("/missedtechnician",[
         }
     },
     (session,args,next)=>{
-         session.send("I will provide you a $20 voucher, you can use this voucher for VOD kindly help to accept");
-         session.clearDialogStack();
-    },
+
+        var msg = new builder.Message(session).addAttachment(createHeroCard());
+        builder.Prompts.choice(session, msg, "Accept|Decline");
+     },
     (session,results, next)=>{
-        if(results.response==="Accept"){
-            session.send("Thank you for accepting the coupon");
-        }
+            if(results.response.entity==="Accept"){
+                session.send("Thank you for accepting the coupon");
+            }else{
+                // Look for another offer for this guy.
+                session.send("I am sorry that you didn't like our offer, let me you schedule right away");
+                session.beginDialog("/schedule");
+            }
+            session.endDialog("Thank you for contacting NXT Telecom");
+            //Start appoitment prociess;
+           // session.clearDialogStack();
     }
     
-]);
-
-
-dialog.onDefault(builder.DialogAction.send("I am sorry I don't understand your question, please try reprashe it"));
-
-// Root Dialog for bot
-/*bot.dialog("/",[
-    (session,args,next)=>{
-        if(!session.userData.accountNumber){
-            session.beginDialog("/profile");
-        }else{
-            next();
-        }
-    },
-    (session,results)=>{
-        session.send("Hello %s",session.userData.name);
+]).triggerAction({
+    matches: 'MissedTechnician',
+    onInterrupted: function (session) {
+        session.send('How may I help you today ?');
+        session.endDialog();
+    }   
+}).cancelAction({
+    matches : 'cancel',
+    onDefault : function(){
+        sessionStorage.send("Thanks, I'll cancel the details and will not proceed with scheduling");
+        session.endDialog();
     }
-]);*/
+});
+
+
 
 
 /*
@@ -104,7 +127,7 @@ dialog.onDefault(builder.DialogAction.send("I am sorry I don't understand your q
  * Begin Conversation 
  * 
  */ 
-bot.dialog('/start', [
+bot.dialog("/start", [
     (session)=>{
         session.sendTyping();
         session.send("Welcome back Mr %s <br> How can I help \
@@ -121,10 +144,31 @@ bot.dialog('/start', [
  * 
  */ 
 bot.dialog("/schedule", [
-    (session)=>{
-        session.send("Working on create a appoitment for you");
-        session.clearDialogStack();
-        session.cancelDialog();
+    (session, args, next)=>{
+        builder.Prompts.text(session,"When do you prefer new appoitment");
+       
+     },
+    (session,results,next)=>{
+        session.sendTyping();
+        /*
+        getLuisIntent(querystring.escape(results.response), (data)=>{
+                console.log(data);
+                let schedule = builder.EntityRecognizer.findEntity(data.entities,'builtin.datetime.time');
+                console.log("=========================");
+                console.log(schedule);
+                console.log("========================");
+            
+        });
+        */
+        builder.LuisRecognizer.recognize(results.response,model, (err,intents,entities)=>{
+                if(err){
+                    console.log("Some error occurred in calling LUIS");
+                }
+                console.log(intents);
+                console.log("==================");
+                console.log(entities);
+        });
+        
     }
 ]);
 
@@ -132,8 +176,8 @@ bot.dialog("/schedule", [
 
 
 /*
- *
- * Gather profile details for user
+ * This dialog will be used to gather the customer account number and pin
+ * A call to rest end point should be made to validate the account number
  * 
  * 
  */ 
@@ -153,18 +197,19 @@ bot.dialog("/profile", [
     },
     (session,results)=>{
         session.userData.accountPin = results.response;
-        session.endDialog("Thank you, We are validating your account, please wait...")
+        //call validate account number
+        session.send("Thank you, We are validating your account, please wait...");
+        session.endDialog("How may I help you?");
+        
     },
 ])
 
-
-dialog.onBegin(function (session, args, next) {
-     if(!session.userData.accountNo){
-         session.beginDialog("/profile");
-     }
-     next();
-});
-
+/*
+ *
+ *  Look for an account details based on the number given by user
+ * 
+ * 
+ */ 
 
 lookUPAccount = function(accountNo) {
         // Lets keep dummy for demo else will be consuming rest end point 
@@ -173,6 +218,14 @@ lookUPAccount = function(accountNo) {
         } 
 
 }
+
+
+
+/*
+ * Arbit function to check the issue in the system
+ * 
+ * 
+ */ 
 
 pullschedule = function(accountNo) {
         console.log("Fetching details for user %s", accountNo);
@@ -183,4 +236,75 @@ pullschedule = function(accountNo) {
             }
         })
         return user;
+}
+
+/*
+ *  Create offer Card based on the input from Pointis/
+ * 
+ * 
+ */ 
+
+function createHeroCard(session) {
+    return new builder.HeroCard(session)
+        .title('$20 VOD Coupon')
+        .text('Build and connect intelligent bots to interact with your users naturally wherever they are, from text/sms to Skype, Slack, Office 365 mail and other popular services.')
+        .buttons([
+            builder.CardAction.postBack(session,"Accept", "Accept"),
+            builder.CardAction.postBack(session,"Decline", "Decline")
+        ]);
+}
+
+
+/*
+ *
+ *  Trying to analyse promt resonse from LUIS 
+ * 
+ * 
+ * 
+ */
+function luisCall(session) {
+builder.IntentDialog(session.message.text, model, function (err, intents, entities) {
+                var from  = builder.EntityRecognizer.resolveTime(args.entities);
+                console.log(builder.intents);
+                if (from) {
+                    // User said a valid date.
+                    session.endDialog({ response: from });
+                } else if (session.dialogData.maxRetries > 0) {
+                    // Re-prompt
+                    session.dialogData.maxRetries--;
+                    builder.Prompts.text(session, "I'm sorry I didn't get that, please try again?");
+                } else {
+                    // Too many retries. We end the dialog with a reason of notCompleted.
+                    session.endDialog({ resumed: builder.ResumeReason.notCompleted }); 
+                }
+ });
+}
+/*
+ * Have to call luis for intent and entities on each promt
+ * 
+ *
+ */
+
+
+function getLuisIntent(question,callback){
+    var query = "?subscription-key=9c2eaf8becea42ef9a98c0d7e22ffa65&verbose=true&q="+question;
+    var options = {};
+    options.url = "https://westus.api.cognitive.microsoft.com";
+    options.type = options.type || "json";
+    options.path = "/luis/v2.0/apps/899a5581-0c98-4e96-a389-13a6080eabf8" + query;
+    options.headers = {Accept: "application/json"};
+
+
+    var client = restify.createClient(options);
+
+    client.get(options, function(err, req, res, data) {
+        if (err) {
+            console.log(err);
+            return;
+        }
+        client.close();
+        console.log(JSON.stringify(data));
+
+        callback(JSON.stringify(data));
+    });
 }

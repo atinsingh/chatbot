@@ -28,4 +28,10 @@ bot.dialog("/missedtechnician",[
         }
     }
     
-]);
+]).triggerAction({
+    matches: 'MissedTechnician',
+    onInterrupted: function (session) {
+        session.send('How may I help you today ?');
+    }
+});
+
