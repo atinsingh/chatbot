@@ -168,6 +168,7 @@ bot.dialog("/schedule", [
                 console.log("==================");
                 console.log(entities);
         });
+        session.endDialog("Thank you, I have schduled your appointment, our techcian will call you 15 min before your appoitment");
         
     }
 ]);
@@ -185,7 +186,8 @@ bot.dialog("/schedule", [
 // Take the NXT account number and pin in this dialog and look up user account and authenticate user and set up his name in session;
 bot.dialog("/profile", [
     (session)=>{
-        builder.Prompts.text(session,"Kindly provide your 8 git NXT account number");
+        session.send("Welcome to NXT Telecom, to serve you better,")
+        builder.Prompts.text(session,"Please provide your 8 git NXT account number");
     },
     (session,results,next)=>{
         session.userData.accountNo = results.response;
@@ -255,30 +257,7 @@ function createHeroCard(session) {
 }
 
 
-/*
- *
- *  Trying to analyse promt resonse from LUIS 
- * 
- * 
- * 
- */
-function luisCall(session) {
-builder.IntentDialog(session.message.text, model, function (err, intents, entities) {
-                var from  = builder.EntityRecognizer.resolveTime(args.entities);
-                console.log(builder.intents);
-                if (from) {
-                    // User said a valid date.
-                    session.endDialog({ response: from });
-                } else if (session.dialogData.maxRetries > 0) {
-                    // Re-prompt
-                    session.dialogData.maxRetries--;
-                    builder.Prompts.text(session, "I'm sorry I didn't get that, please try again?");
-                } else {
-                    // Too many retries. We end the dialog with a reason of notCompleted.
-                    session.endDialog({ resumed: builder.ResumeReason.notCompleted }); 
-                }
- });
-}
+
 /*
  * Have to call luis for intent and entities on each promt
  * 
