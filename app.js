@@ -128,7 +128,7 @@ bot.dialog("/missedtechnician",[
  * 
  */ 
 bot.dialog("/start", [
-    (session)=>{
+    (session,args,next)=>{
         session.sendTyping();
         session.send("Welcome back Mr %s <br> How can I help \
         you today", session.userData.name);
@@ -146,8 +146,7 @@ bot.dialog("/start", [
 bot.dialog("/schedule", [
     (session, args, next)=>{
         builder.Prompts.text(session,"When do you prefer new appoitment");
-       
-     },
+    },
     (session,results,next)=>{
         session.sendTyping();
         /*
@@ -201,7 +200,7 @@ bot.dialog("/profile", [
         session.userData.accountPin = results.response;
         //call validate account number
         session.send("Thank you, We are validating your account, please wait...");
-        session.endDialog("How may I help you?");
+        session.endDialog("Hi %s How may I help you today?",session.userData.name);
         
     },
 ])
