@@ -179,7 +179,13 @@ bot.dialog("/schedule", [
         session.endDialog("Thank you, I have schduled your appointment, our techcian will call you 15 min before your appoitment");
         
     }
-]);
+]).cancelAction({
+    matches : 'cancel',
+    onDefault : function(){
+        sessionStorage.send("Thanks, I'll cancel the details and will not proceed with scheduling");
+        session.endDialog();
+    }
+});
 
  
 
