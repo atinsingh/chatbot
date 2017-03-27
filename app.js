@@ -36,7 +36,7 @@ let dialog = new builder.IntentDialog({
 bot.dialog('/',dialog);
 
 
-dialog.matches('BeginConversation',"/start");
+dialog.matches('BeginConversation','/start');
 
 dialog.matches('MissedTechnician','/missedtechnician');
 
@@ -62,6 +62,24 @@ dialog.onBegin( (session, args, next) => {
 });
 
 
+/*
+ *
+ * Begin Conversation 
+ * 
+ */ 
+bot.dialog("/start", [
+    (session,args,next)=>{
+        session.sendTyping();
+        if(!session.userData.name){
+            session.beginDialog("/profile");
+        }else{
+        session.send("Welcome back Mr %s <br> How can I help \
+        you today", session.userData.name);
+        session.cancelDialog();
+        }
+    }
+]);
+
 
 
 
@@ -75,8 +93,7 @@ bot.dialog("/missedtechnician",[
         let schedule = pullschedule(session.userData.accountNo);
         if(schedule!==null){
             // Call pointis to get the action;
-            session.send("Apologies, I found that you had an appointment \
-            on %s at %s but we failed as %s",schedule.appoitmentDate,schedule.appoitmentTime,schedule.issuetag);
+            session.send("Apologies, I found that you had an appointment on %s at %s but we failed as %s",schedule.appoitmentDate,schedule.appoitmentTime,schedule.issuetag);
             session.sendTyping();
             session.send("We would like to offer you following to compensate ");
             next();
@@ -88,7 +105,7 @@ bot.dialog("/missedtechnician",[
         }
     },
     (session,args,next)=>{
-
+        session.sendTyping();
         var msg = new builder.Message(session).addAttachment(createHeroCard());
         builder.Prompts.choice(session, msg, "Accept|Decline");
      },
@@ -126,23 +143,7 @@ bot.dialog("/missedtechnician",[
 
 
 
-/*
- *
- * Begin Conversation 
- * 
- */ 
-bot.dialog("/start", [
-    (session,args,next)=>{
-        session.sendTyping();
-        if(!session.userData.name){
-            session.beginDialog("/profile");
-        }else{
-        session.send("Welcome back Mr %s <br> How can I help \
-        you today", session.userData.name);
-        session.cancelDialog();
-        }
-    }
-]);
+
 
 
 /*
