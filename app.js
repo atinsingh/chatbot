@@ -84,7 +84,7 @@ bot.dialog("/missedtechnician",[
         }else{
             session.send("Sorry I couldn't pull your records, please provide your details again");
             session.userData = {};
-            //session.beginDialog("/profile")
+            session.beginDialog("/profile")
         }
     },
     (session,args,next)=>{
@@ -95,14 +95,18 @@ bot.dialog("/missedtechnician",[
     (session,results, next)=>{
             if(results.response.entity==="Accept"){
                 session.send("Thank you for accepting the coupon");
+                session.beginDialog("/schedule");
             }else{
                 // Look for another offer for this guy.
                 session.send("I am sorry that you didn't like our offer, let me you schedule right away");
                 session.beginDialog("/schedule");
             }
-            session.endDialog("Thank you for contacting NXT Telecom");
-            //Start appoitment prociess;
+            //session.endDialog("Thank you for contacting NXT Telecom");        //Start appoitment prociess;
+ 
            // session.clearDialogStack();
+    },
+    (session)=>{
+        session.endDialog("Thank you for contacting NXT Telecom");
     }
     
 ]).triggerAction({
@@ -130,9 +134,13 @@ bot.dialog("/missedtechnician",[
 bot.dialog("/start", [
     (session,args,next)=>{
         session.sendTyping();
+        if(!session.userData.name){
+            session.beginDialog("/profile");
+        }else{
         session.send("Welcome back Mr %s <br> How can I help \
         you today", session.userData.name);
         session.cancelDialog();
+        }
     }
 ]);
 
@@ -200,9 +208,9 @@ bot.dialog("/profile", [
         session.userData.accountPin = results.response;
         //call validate account number
         session.send("Thank you, We are validating your account, please wait...");
-        session.endDialog("Hi %s How may I help you today?",session.userData.name);
-        
-    },
+        session.send("Hi %s How may I help you today?",session.userData.name);
+        session.endDialog();
+    }
 ])
 
 /*
