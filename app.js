@@ -58,6 +58,8 @@ dialog.onDefault(builder.DialogAction.send("I am sorry I don't understand your q
 dialog.onBegin( (session, args, next) => {
      if(!session.userData.accountNo){
          session.beginDialog("/profile");
+     }else{
+         next();
      }
 });
 
@@ -157,26 +159,62 @@ bot.dialog("/schedule", [
         builder.Prompts.text(session,"When do you prefer new appoitment");
     },
     (session,results,next)=>{
-        session.sendTyping();
-        /*
+        
+       
         getLuisIntent(querystring.escape(results.response), (data)=>{
-                console.log(data);
-                let schedule = builder.EntityRecognizer.findEntity(data.entities,'builtin.datetime.time');
-                console.log("=========================");
-                console.log(schedule);
-                console.log("========================");
-            
+                let schedule = builder.EntityRecognizer.findAllEntities(data.entities,'builtin.datetime.date');
+                let appoitmentDate = builder.EntityRecognizer.resolveTime(schedule);
+                let scheduleTime = builder.EntityRecognizer.findAllEntities(data.entities,'builtin.datetime.time');
+                console.log(scheduleTime);
+                let time =[];
+                if(scheduleTime.length>1){
+                    scheduleTime.forEach((entity)=>{
+                        let data = [entity];
+                        time.push(data);
+                    });
+                }
+                
+                let fromTime = builder.EntityRecognizer.resolveTime(time[0]);
+                let toTime =   builder.EntityRecognizer.resolveTime(time[1]);
+                //console.log(fromDate.toLocaleDateString());
+                console.log(fromTime.toLocaleString());
+                session.endDialog("Thank you, I have schduled your appointment on %s between %s to %s",
+                appoitmentDate.toLocaleDateString(),fromTime.toLocaleTimeString(),toTime.toLocaleTimeString());
+
+
         });
-        */
-        builder.LuisRecognizer.recognize(results.response,model, (err,intents,entities)=>{
+        
+        /*builder.LuisRecognizer.recognize(results.response,model, (err,intents,entities)=>{
                 if(err){
                     console.log("Some error occurred in calling LUIS");
                 }
                 console.log(intents);
                 console.log("==================");
                 console.log(entities);
-        });
-        session.endDialog("Thank you, I have schduled your appointment, our techcian will call you 15 min before your appoitment");
+                let dateofAppoitment = builder.EntityRecognizer.findAllEntities(entities,"builtin.datetime.date");
+                let timeofAppoitment = builder.EntityRecognizer.findEntity(entities,"builtin.datetime.time");
+
+
+                //console.log("##################### "+timeofAppoitment.length);
+                let datetime;
+                let time;
+                if(dateofAppoitment){
+                        dateime = builder.EntityRecognizer.resolveTime(timeofAppoitment);
+                }
+                if(timeofAppoitment){
+                 time = builder.EntityRecognizer.parseTime(entities);
+                }
+                
+                console.log("#####################");
+                console.log(time);
+               // if(time.length>1){
+                    console.log("Your appoitment is fixed on %s at %s", dateime.toLocaleDateString(),dateime.toLocaleTimeString());
+                //}
+                
+        });*/
+        session.sendTyping();
+        session.send("I am checking available slots for you.");
+        
         
     }
 ]).cancelAction({
@@ -296,8 +334,8 @@ function getLuisIntent(question,callback){
             return;
         }
         client.close();
-        console.log(JSON.stringify(data));
+        //console.log(JSON.stringify(data));
 
-        callback(JSON.stringify(data));
+        callback(data);
     });
 }
