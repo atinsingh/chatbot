@@ -1,33 +1,55 @@
 const restify =  require('restify');
 const builder = require('botbuilder');
 const querystring = require("querystring");
+const config = require('./appConfig.json');
+const users =  require("./data.json");
+const msgs  =  require("./messages.json");
+const utilites = require("./utility");
 
-const config = require('./config.js');
-const users =   require("./appconfig.json");
+//Replace this with config soon.
 let model = 'https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/899a5581-0c98-4e96-a389-13a6080eabf8?subscription-key=9c2eaf8becea42ef9a98c0d7e22ffa65&verbose=true&q=';
 
-//Create a server
+
+
+/*
+ * This section will create a simple restify server to listen to messages recived by bot
+ * Port will be taken from env variable.
+ *
+ */
 
 let server = restify.createServer();
 let port = process.env.port||process.env.PORT||3978;
 server.listen(port,()=>{
-    console.log("Bot Server Started  at port %d ", port);
+     console.log("Bot Server Started  at port %d ", port);
 });
 
 
 
+/*
+ * This section is create a Universal chatbot using Microsoft Bot Builder framework Node JS SDK
+ * Bot need an Microsoft APP ID and App Password.
+ * App ID and password will be part of App Config
+ */
 
-// Create Intital Chat Bot 
 
-let connectionConfigation = new builder.ChatConnector(config);
+let connectionConfiguration = new builder.ChatConnector({
+    appId:config.appId,
+    appPassword:config.appPassword
+});
+
+let bot =  new builder.UniversalBot(connectionConfiguration);
+
+server.post("/api/messages",connectionConfiguration.listen());
 
 
-let bot =  new builder.UniversalBot(connectionConfigation);
+
+/*
+ * Set Up recongizer using Microsoft BotFramework,
+ * Set up all the waterfall dialog routers that matches the intents defined in LUIS
+ *
+ */
 
 let recognizer = new builder.LuisRecognizer(model);
-
-server.post("/api/messages",connectionConfigation.listen());
-
 
 let dialog = new builder.IntentDialog({
     recognizers :[recognizer]
@@ -36,13 +58,13 @@ let dialog = new builder.IntentDialog({
 bot.dialog('/',dialog);
 
 
+// Match all Routes
+
 dialog.matches('BeginConversation','/start');
-
 dialog.matches('MissedTechnician','/missedtechnician');
-
 dialog.matches('ScheduleTechnician','/schedule');
-
-dialog.onDefault(builder.DialogAction.send("I am sorry I don't understand your question, please try reprashe it"));
+dialog.matches('CancelOperation','/cancelme');
+dialog.onDefault(builder.DialogAction.send(msgs.notmatched));
 
 
 
@@ -90,7 +112,7 @@ bot.dialog("/missedtechnician",[
     (session,results,next)=>{
         if(session.message.text)
         session.send("I am really sorry to hear that \
-        , let me look into it",session.userData.name);
+        ,let me look into it",session.userData.name);
         session.sendTyping();
         let schedule = pullschedule(session.userData.accountNo);
         if(schedule!==null){
@@ -156,14 +178,21 @@ bot.dialog("/missedtechnician",[
  */ 
 bot.dialog("/schedule", [
     (session, args, next)=>{
-        builder.Prompts.text(session,"When do you prefer new appoitment");
+        builder.Prompts.text(session,msgs.askAppoitment);
     },
     (session,results,next)=>{
-        
-       
-        getLuisIntent(querystring.escape(results.response), (data)=>{
+         utilites.getLuisIntent(querystring.escape(results.response),(data)=>{
+                if(data.topScoringIntent.intent==='CancelOperation'){
+                    builder.Prompts.confirm(session,"Are you sure to cancel the appointment process ?");
+                    session.beginDialog("/cancelme",{"response":results.response, "jumpstep":true});
+                    session.cancelDialog();
+                 }
+                console.log(data.entities);
                 let schedule = builder.EntityRecognizer.findAllEntities(data.entities,'builtin.datetime.date');
                 let appoitmentDate = builder.EntityRecognizer.resolveTime(schedule);
+                if(!appoitmentDate){
+                    //use custom parser
+                }
                 let scheduleTime = builder.EntityRecognizer.findAllEntities(data.entities,'builtin.datetime.time');
                 console.log(scheduleTime);
                 let time =[];
@@ -180,9 +209,9 @@ bot.dialog("/schedule", [
                 console.log(fromTime.toLocaleString());
                 session.endDialog("Thank you, I have schduled your appointment on %s between %s to %s",
                 appoitmentDate.toLocaleDateString(),fromTime.toLocaleTimeString(),toTime.toLocaleTimeString());
+            });
+            
 
-
-        });
         
         /*builder.LuisRecognizer.recognize(results.response,model, (err,intents,entities)=>{
                 if(err){
@@ -225,7 +254,40 @@ bot.dialog("/schedule", [
     }
 });
 
- 
+bot.dialog("/cancelme", [
+    (session,args,next)=>{
+        if(args){
+            console.log("Received Arguments");
+            if(args.jumpstep) {
+                next();
+            }
+        }
+        else {
+            builder.Prompts.confirm(session, msgs.cancelPrompt, {listStyle: builder.ListStyle["button"]});
+        }
+    },
+    (session,results,args)=>{
+        console.log("Going to cancell current operations");
+        if(args.response){
+            session.clearDialogStack("Cancelled operation");
+            //session.cancelDialog("Operation Cancelled");
+
+        }else{
+            console.log("Inside else");
+            if(results.response){
+                console.log("Cancelling it");
+                session.clearDialogStack("Cancelled operation");
+
+            }else {
+                console.log("Cancelling in else of results");
+                session.cancelDialog("Canclled");
+            }
+         }
+
+     }
+
+    ]);
+
 
 
 /*
@@ -308,7 +370,26 @@ function createHeroCard(session) {
         ]);
 }
 
+/*
+ *
+ *
+ */
 
+
+function routeMessages(intent, session) {
+    console.log("I am routing message for intent "+intent);
+    switch (intent){
+        case 'CancelOperation' :
+            session.cancelDialog();
+            session.beginDialog("/cancel");
+            break;
+        case 'ScheduleTechnician' :
+            session.beginDialog("/schedule");
+            break;
+        case 'MissedTechnician' :
+            session.beginDialog("/missedtechnician")
+    }
+}
 
 /*
  * Have to call luis for intent and entities on each promt
@@ -317,25 +398,3 @@ function createHeroCard(session) {
  */
 
 
-function getLuisIntent(question,callback){
-    var query = "?subscription-key=9c2eaf8becea42ef9a98c0d7e22ffa65&verbose=true&q="+question;
-    var options = {};
-    options.url = "https://westus.api.cognitive.microsoft.com";
-    options.type = options.type || "json";
-    options.path = "/luis/v2.0/apps/899a5581-0c98-4e96-a389-13a6080eabf8" + query;
-    options.headers = {Accept: "application/json"};
-
-
-    var client = restify.createClient(options);
-
-    client.get(options, function(err, req, res, data) {
-        if (err) {
-            console.log(err);
-            return;
-        }
-        client.close();
-        //console.log(JSON.stringify(data));
-
-        callback(data);
-    });
-}

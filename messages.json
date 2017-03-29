@@ -1,0 +1,20 @@
+{
+    "cancelPrompt": [
+                        "Do you want to cancel the operation",
+                        "Would you like me to cancel the current operation",
+                        "Please repond with yes with if you want to cancel" 
+                    ],
+     "notmatched" : [
+                      "I am sorry I didn't understand, try rephrase the msg",
+                      "I am sorry I am not able to understand your intent, kindly rephrase it",
+                      "Apologies, couldn't get it, please rephrase in simpler message",
+                      "I am not able to understand your message :( , kidly rephrase it"
+                     ],
+     "askAppoitment" : [
+                        "Kindly let me know where you want your appoitment ?  - example next thursday between 2PM to 6 PM",
+                        "Kindly let me know your preference for appoitment ?"
+                      ],
+     "nboAccept"     : [
+                        "Awesome !. "
+     ]
+}
