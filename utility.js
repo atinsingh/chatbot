@@ -125,7 +125,7 @@ module.exports.getFreeslots = function(scheduleDay,startTime,endTime){
     accountData.appoitmentSlots.forEach((slot)=>{
         if(slot.starttime>=startTime){
             slot.date=scheduleDay;
-            slots[slot.date+":"+slot.starttime]=slot;
+            slots[slot.date+"-"+slot.starttime]=slot;
         }
     });
     console.log("Below are the slots I have identified");

@@ -126,16 +126,17 @@ bot.dialog("/missedtechnician",[
         }
        },
     (session,results,next)=>{
+        session.userData.schduleDone=false;
         session.sendTyping();
-        session.send("I am really sorry to hear that let me look into it");
+        session.send(msgs.missedtechnicianDialog.step1Dialog);
         session.sendTyping();
         setTimeout(()=> {
             let schedule = session.userData.user;
             if (schedule !== null) {
                 // Call pointis to get the action;
-                session.send("Apologies, I found that you had an appointment on %s at %s but we failed as %s", schedule.appointmentDate, schedule.appoitmentTime, schedule.issuetag);
+                session.send(msgs.missedtechnicianDialog.step2Dialog, schedule.appointmentDate, schedule.appoitmentTime, schedule.issuetag);
                 session.sendTyping();
-                session.send("We would like to offer you following to compensate ");
+                session.send(msgs.missedtechnicianDialog.step3DialogOffer);
                 next();
 
             } else {
@@ -156,11 +157,16 @@ bot.dialog("/missedtechnician",[
                 session.send("Please provide your choice");
             }
             if(results.response.entity==="Accept"){
-                session.send("Thank you for accepting the coupon");
+
+                    session.sendTyping();
+                    session.send(msgs.missedtechnicianDialog.step5OfferAcceptance);
+                    session.sendTyping();
+                    session.send(msgs.missedtechnicianDialog.step6BeginSchedule);
+
                 session.beginDialog("/schedule");
             }else{
                 // Look for another offer for this guy.
-                session.send("I am sorry that you didn't like our offer, let me you schedule right away");
+                session.send(msgs.missedtechnicianDialog.step5OfferDecline);
                 session.beginDialog("/schedule");
             }
     },
@@ -241,8 +247,12 @@ bot.dialog("/schedule", [
                 let appointmentDate;
                 if(_.isEmpty(scheduleDate)){
                     scheduleDate = builder.EntityRecognizer.findAllEntities(data.entities,'builtin.datetime.time');
-                    utilites.dateTimeDateMoments(scheduleDate,'builtin.datetime.time');
+
                     appointmentDate = builder.EntityRecognizer.resolveTime(scheduleDate);
+                    if(!appointmentDate){
+                        utilites.dateTimeDateMoments(scheduleDate,'builtin.datetime.time');
+                        appointmentDate = builder.EntityRecognizer.resolveTime(scheduleDate);
+                    }
                     console.log(appointmentDate);
                 }else {
                     if (!appointmentDate) {
@@ -271,7 +281,7 @@ bot.dialog("/schedule", [
                 }
                 let slots = utilites.getFreeslots(moment.utc(appointmentDate).format('YYYY-MM-DD'),moment.utc(fromTime).format('HHmm'),moment.utc(toTime).format('HHmm'));
                 session.dialogData.slots = slots;
-                builder.Prompts.choice(session, "Below are list of slots available",slots,{listStyle:3});
+                builder.Prompts.choice(session, "Below are list of slots available, kindly click a slot to fix appointment",slots,{listStyle:3});
                 console.log("---from time---");
                 console.log(fromTime);
 
@@ -323,6 +333,19 @@ bot.dialog("/schedule", [
         // Use this function to book a slot for the user.
         if(results.response){
             session.send("Thank you, I have booked an appotment for your on %s, at %s ", session.dialogData.slots[results.response.entity].date,session.dialogData.slots[results.response.entity].starttime );
+
+            /*
+             * Temp code will be removed
+             *
+             */
+
+            users.accounts.forEach((account)=>{
+               if(account.accountNumber===session.userData.user.accountNumber){
+                   account.appointmentDate = session.dialogData.slots[results.response.entity].date;
+                   account.appoitmentTime = session.dialogData.slots[results.response.entity].starttime;
+               }
+            });
+
             session.userData.schduleDone=true;
             session.send("Good bye");
             session.endDialog();
@@ -425,7 +448,7 @@ bot.dialog("/profile", [
 function createHeroCard(session) {
     return new builder.HeroCard(session)
         .title('$20 VOD Coupon')
-        .text('Build and connect intelligent bots to interact with your users naturally wherever they are, from text/sms to Skype, Slack, Office 365 mail and other popular services.')
+        .text('Enjoy the VOD content')
         .buttons([
             builder.CardAction.postBack(session,"Accept", "Accept"),
             builder.CardAction.postBack(session,"Decline", "Decline")

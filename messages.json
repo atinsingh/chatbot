@@ -63,7 +63,30 @@
     },
   "missedtechnicianDialog" :{
     "step1Dialog" : [
-        
+        "I am really sorry to hear that, let me quickly check your account to identify the problem",
+        "Apologies for inconvenience, Let me quickly scan for your account to diagnos the issue",
+        "Kindly accept my sincere apology, let me verify the problem at our end.."
+    ],
+    "step2Dialog" : [
+      "Apologies, I found that you had an appointment on %s at %s but %s",
+      "Well I did found that you had an appointment on %s at %s but it couldn't proceed due to %s",
+      "Yep our records shows that you had an appointment on %s at %s but it couldn't proceed due to %s"
+    ],
+    "step3DialogOffer" : [
+      "To compensate your loss, we would like to offer following....",
+      "Kindly accept our apology in this regards, we would like to extend following .."
+    ],
+    "step5OfferAcceptance" : [
+      "Thank you for accepting our our, let me provision it for you right away..",
+      "Thank you for your acceptance, we appreciate it"
+    ],
+    "step6BeginSchedule" : [
+      "Let me quickly start appointment procees to give you a quick appointment",
+      "Let me begin a appointment booking process, so I can fix you new appointment"
+    ],
+    "step5OfferDecline" : [
+      "I am really sorry to hear that , let reschedule your appoitment rigth away...",
+      "My apology, that you didn't liked our offer, let me reschedule your appoitment right away..."
     ]
   }
 
