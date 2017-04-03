@@ -2,22 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="471ecb5c-9329-47e7-8f7f-d2c522521ee1" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/node_modules/bunyan/node_modules/dtrace-provider/build/Release/DTraceProviderBindings.node" afterPath="$PROJECT_DIR$/node_modules/bunyan/node_modules/dtrace-provider/build/Release/DTraceProviderBindings.node" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/node_modules/bunyan/node_modules/dtrace-provider/libusdt/libusdt.a" afterPath="$PROJECT_DIR$/node_modules/bunyan/node_modules/dtrace-provider/libusdt/libusdt.a" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/node_modules/dtrace-provider/build/Release/DTraceProviderBindings.node" afterPath="$PROJECT_DIR$/node_modules/dtrace-provider/build/Release/DTraceProviderBindings.node" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/node_modules/dtrace-provider/libusdt/libusdt.a" afterPath="$PROJECT_DIR$/node_modules/dtrace-provider/libusdt/libusdt.a" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app.js" afterPath="$PROJECT_DIR$/app.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/messages.json" afterPath="$PROJECT_DIR$/messages.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/node_modules/mime-db/HISTORY.md" afterPath="$PROJECT_DIR$/node_modules/mime-db/HISTORY.md" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/node_modules/mime-db/db.json" afterPath="$PROJECT_DIR$/node_modules/mime-db/db.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/node_modules/mime-db/package.json" afterPath="$PROJECT_DIR$/node_modules/mime-db/package.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/node_modules/mime-types/HISTORY.md" afterPath="$PROJECT_DIR$/node_modules/mime-types/HISTORY.md" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/node_modules/mime-types/README.md" afterPath="$PROJECT_DIR$/node_modules/mime-types/README.md" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/node_modules/mime-types/index.js" afterPath="$PROJECT_DIR$/node_modules/mime-types/index.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/node_modules/mime-types/package.json" afterPath="$PROJECT_DIR$/node_modules/mime-types/package.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/node_modules/moment/package.json" afterPath="$PROJECT_DIR$/node_modules/moment/package.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/utility.js" afterPath="$PROJECT_DIR$/utility.js" />
     </list>
     <ignored path="chatbot.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -40,11 +26,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="app.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="app.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="171">
-              <caret line="253" column="93" selection-start-line="253" selection-start-column="93" selection-end-line="253" selection-end-column="93" />
+            <state relative-caret-position="321">
+              <caret line="227" column="61" selection-start-line="227" selection-start-column="61" selection-end-line="227" selection-end-column="61" />
               <folding />
             </state>
           </provider>
@@ -60,10 +46,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="utility.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="utility.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/utility.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="396">
+            <state relative-caret-position="1905">
               <caret line="127" column="30" selection-start-line="127" selection-start-column="30" selection-end-line="127" selection-end-column="30" />
               <folding />
             </state>
@@ -141,8 +127,8 @@
         <option value="$PROJECT_DIR$/dialogs.js" />
         <option value="$PROJECT_DIR$/data.json" />
         <option value="$PROJECT_DIR$/messages.json" />
-        <option value="$PROJECT_DIR$/app.js" />
         <option value="$PROJECT_DIR$/utility.js" />
+        <option value="$PROJECT_DIR$/app.js" />
       </list>
     </option>
   </component>
@@ -287,12 +273,12 @@
       <updated>1490717772316</updated>
       <workItem from="1490717773544" duration="11545000" />
       <workItem from="1490752701987" duration="8483000" />
-      <workItem from="1490961783133" duration="21086000" />
+      <workItem from="1490961783133" duration="21359000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="41114000" />
+    <option name="totallyTimeSpent" value="41387000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="20" y="33" width="1260" height="688" extended-state="0" />
@@ -525,18 +511,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app.js">
+    <entry file="file://$PROJECT_DIR$/utility.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="171">
-          <caret line="253" column="93" selection-start-line="253" selection-start-column="93" selection-end-line="253" selection-end-column="93" />
+        <state relative-caret-position="1905">
+          <caret line="127" column="30" selection-start-line="127" selection-start-column="30" selection-end-line="127" selection-end-column="30" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/utility.js">
+    <entry file="file://$PROJECT_DIR$/app.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="396">
-          <caret line="127" column="30" selection-start-line="127" selection-start-column="30" selection-end-line="127" selection-end-column="30" />
+        <state relative-caret-position="321">
+          <caret line="227" column="61" selection-start-line="227" selection-start-column="61" selection-end-line="227" selection-end-column="61" />
           <folding />
         </state>
       </provider>

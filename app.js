@@ -217,13 +217,17 @@ bot.dialog("/schedule", [
         if(results.response){
             if(results.response.entity=="YES"){
                 session.userData.schduleDone=false;
+                builder.Prompts.text(session,msgs.askAppoitment);
             }else{
                 session.send("Good Bye");
                 session.endDialog();
-                session.beginDialog("/cancelme",{"response":results.response, "jumpstep":true});
+                session.cancelDialog();
+                //session.beginDialog("/cancelme",{"response":results.response, "jumpstep":true});
             }
+        }else {
+            builder.Prompts.text(session,msgs.askAppoitment);
         }
-        builder.Prompts.text(session,msgs.askAppoitment);
+
     },
     (session,results,next)=>{
           utilites.getLuisIntent(querystring.escape(results.response),(data)=>{
