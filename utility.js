@@ -1,6 +1,10 @@
 
 const config = require("./appConfig.json");
+const accountData = require('./data.json');
+const moment = require("moment");
+const _ = require("underscore");
 const restify = require("restify");
+
 
 
  module.exports.getLuisIntent = function(question, callback) {
@@ -20,7 +24,7 @@ const restify = require("restify");
                     return;
                 }
                 client.close();
-                //console.log(JSON.stringify(data));
+                console.log(JSON.stringify(data));
 
                 callback(data);
             });
@@ -37,7 +41,8 @@ const restify = require("restify");
       options.url = config.sentiMentURL;
       options.path = "sentiment"
       let client = restify.createClient(options);
-      client.post(options, (err, req,res,data)=>{
+      let docObject = this.createDocument(text);
+      client.post(options, (err, docObject, req,res,data)=>{
             if(err){
                 console.log(err);
                 return;
@@ -47,12 +52,83 @@ const restify = require("restify");
       })
   }
 
-createDocument = function (text) {
+module.exports.createDocument = function (text) {
     let textObj = {};
     textObj.language = "en";
     textObj.id = "1";
     textObj.text = text;
 
-    let documentObj = Object([textObj]);
+    let documentObj = {};
+    documentObj.documents = [textObj];
+    return JSON.stringify(documentObj);
+}
 
+/*
+ * This function should be used to fetch account details, and problem associated with account.
+ * function should take an account number a account pin.
+ * for demo we will load data from JSON and ignore the PIN
+ */
+
+module.exports.pullAccountDetails = function (accountNo, accountPIn) {
+    console.log("Fetching details for account %s", accountNo);
+    let user = null;
+    accountData.accounts.forEach((account)=>{
+        if(Number(account.accountNumber)===accountNo){
+            user = account;
+        }
+    })
+    console.log("Found user details %j", user);
+    return user;
+}
+
+
+/*
+ *
+ * Use custom entity recogniser if inbuilt fails
+ *
+ *
+ */
+
+ module.exports.dateTimeDateMoments = function(datetimeDateEntities, type){
+     _(datetimeDateEntities).map((datetimeDateEntity) => {
+         let entiryType;
+         if(type==='builtin.datetime.time'){
+             entiryType = datetimeDateEntity.resolution.time;
+         }else{
+             entiryType = datetimeDateEntity.resolution.date;
+         }
+         entiryType=  moment.utc(entiryType.replace("XXXX", moment().year())
+         .replace("WXX-XX", 'W' + moment().week() + '-' + moment().day())
+         .replace("WXX", 'W' + moment().week())
+         .replace("XX", moment().month())
+         .replace("XX", moment().day()), moment.ISO_8601,true).format();
+         if(type==='builtin.datetime.time'){
+             datetimeDateEntity.resolution.time = entiryType;
+         }else{
+             datetimeDateEntity.resolution.date = entiryType;
+         }
+     });
+     console.log("in parsing function");
+     console.log(datetimeDateEntities);
+
+}
+
+/*
+ * Temorary function to pull the available slots,
+ * this would be replaced with the actual API call in the future. API might need few params
+ * like Address or ZIP code of the customer and line of business
+ */
+
+module.exports.getFreeslots = function(scheduleDay,startTime,endTime){
+    let slots ={};
+    console.log("StartTime "+startTime);
+    accountData.appoitmentSlots.forEach((slot)=>{
+        if(slot.starttime>=startTime){
+            slot.date=scheduleDay;
+            slots[slot.date+":"+slot.starttime]=slot;
+        }
+    });
+    console.log("Below are the slots I have identified");
+    console.log(slots);
+    return slots;
 }

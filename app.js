@@ -5,6 +5,8 @@ const config = require('./appConfig.json');
 const users =  require("./data.json");
 const msgs  =  require("./messages.json");
 const utilites = require("./utility");
+const _ = require("underscore");
+const moment = require("moment");
 
 //Replace this with config soon.
 let model = 'https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/899a5581-0c98-4e96-a389-13a6080eabf8?subscription-key=9c2eaf8becea42ef9a98c0d7e22ffa65&verbose=true&q=';
@@ -34,7 +36,8 @@ server.listen(port,()=>{
 
 let connectionConfiguration = new builder.ChatConnector({
     appId:config.appId,
-    appPassword:config.appPassword
+    appPassword:config.appPassword,
+    autoBatchDelay:300
 });
 
 let bot =  new builder.UniversalBot(connectionConfiguration);
@@ -77,28 +80,29 @@ dialog.onDefault(builder.DialogAction.send(msgs.notmatched));
  * 
  */  
 
-dialog.onBegin( (session, args, next) => {
+dialog.onBegin(
+    (session, args, next) => {
      if(!session.userData.accountNo){
          session.beginDialog("/profile");
      }else{
          next();
      }
-});
+    }
+);
 
 
 /*
- *
- * Begin Conversation 
- * 
- */ 
+ * Dialog should be called when user return back  and profile is already stored in the
+ * session data of conversation.
+ * It should be called whenever LUIS is returning intent as "BeginConversation"
+ */
 bot.dialog("/start", [
     (session,args,next)=>{
         session.sendTyping();
         if(!session.userData.name){
             session.beginDialog("/profile");
         }else{
-        session.send("Welcome back Mr %s <br> How can I help \
-        you today", session.userData.name);
+        session.send(msgs.welcomeBack, session.userData.name);
         session.cancelDialog();
         }
     }
@@ -106,27 +110,40 @@ bot.dialog("/start", [
 
 
 
+/*
+ * Dialoag simulates the waterfall conversation for TM Forum catalyst Scenario 5
+ * Dialog should
+ *
+ *
+ */
 
-// Root Dialog for bot
 bot.dialog("/missedtechnician",[
     (session,results,next)=>{
-        if(session.message.text)
-        session.send("I am really sorry to hear that \
-        ,let me look into it",session.userData.name);
-        session.sendTyping();
-        let schedule = pullschedule(session.userData.accountNo);
-        if(schedule!==null){
-            // Call pointis to get the action;
-            session.send("Apologies, I found that you had an appointment on %s at %s but we failed as %s",schedule.appoitmentDate,schedule.appoitmentTime,schedule.issuetag);
-            session.sendTyping();
-            session.send("We would like to offer you following to compensate ");
-            next();
-
+        if(!session.userData.user){
+            session.beginDialog("/profile");
         }else{
-            session.send("Sorry I couldn't pull your records, please provide your details again");
-            session.userData = {};
-            session.beginDialog("/profile")
+            next();
         }
+       },
+    (session,results,next)=>{
+        session.sendTyping();
+        session.send("I am really sorry to hear that let me look into it");
+        session.sendTyping();
+        setTimeout(()=> {
+            let schedule = session.userData.user;
+            if (schedule !== null) {
+                // Call pointis to get the action;
+                session.send("Apologies, I found that you had an appointment on %s at %s but we failed as %s", schedule.appointmentDate, schedule.appoitmentTime, schedule.issuetag);
+                session.sendTyping();
+                session.send("We would like to offer you following to compensate ");
+                next();
+
+            } else {
+                session.send("Sorry I couldn't pull your records, please provide your details again");
+                session.userData = {};
+                session.beginDialog("/profile")
+            }
+        },5000);
     },
     (session,args,next)=>{
         session.sendTyping();
@@ -134,6 +151,10 @@ bot.dialog("/missedtechnician",[
         builder.Prompts.choice(session, msg, "Accept|Decline");
      },
     (session,results, next)=>{
+            if(!results.response){
+                session.sendTyping();
+                session.send("Please provide your choice");
+            }
             if(results.response.entity==="Accept"){
                 session.send("Thank you for accepting the coupon");
                 session.beginDialog("/schedule");
@@ -142,9 +163,6 @@ bot.dialog("/missedtechnician",[
                 session.send("I am sorry that you didn't like our offer, let me you schedule right away");
                 session.beginDialog("/schedule");
             }
-            //session.endDialog("Thank you for contacting NXT Telecom");        //Start appoitment prociess;
- 
-           // session.clearDialogStack();
     },
     (session)=>{
         session.endDialog("Thank you for contacting NXT Telecom");
@@ -177,38 +195,90 @@ bot.dialog("/missedtechnician",[
  * 
  */ 
 bot.dialog("/schedule", [
-    (session, args, next)=>{
+    (session,results,next)=>{
+        if(!session.userData.user){
+            session.beginDialog("/profile");
+        }else{
+            if(session.userData.schduleDone){
+                builder.Prompts.choice(session, " I have found that you recently booked an appoitment, would like to cancel previous one and start new ?","YES|NO",{listStyle:3});
+            }else{
+                next();
+            }
+
+        }
+    },
+    (session, results)=>{
+        if(results.response){
+            if(results.response.entity=="YES"){
+                session.userData.schduleDone=false;
+            }else{
+                session.send("Good Bye");
+                session.endDialog();
+                session.beginDialog("/cancelme",{"response":results.response, "jumpstep":true});
+            }
+        }
         builder.Prompts.text(session,msgs.askAppoitment);
     },
     (session,results,next)=>{
-         utilites.getLuisIntent(querystring.escape(results.response),(data)=>{
+          utilites.getLuisIntent(querystring.escape(results.response),(data)=>{
                 if(data.topScoringIntent.intent==='CancelOperation'){
-                    builder.Prompts.confirm(session,"Are you sure to cancel the appointment process ?");
-                    session.beginDialog("/cancelme",{"response":results.response, "jumpstep":true});
-                    session.cancelDialog();
-                 }
-                console.log(data.entities);
-                let schedule = builder.EntityRecognizer.findAllEntities(data.entities,'builtin.datetime.date');
-                let appoitmentDate = builder.EntityRecognizer.resolveTime(schedule);
-                if(!appoitmentDate){
-                    //use custom parser
+                    //builder.Prompts.confirm(session,"Are you sure to cancel the appointment process ?");
+                    session.beginDialog("/cancelme");
+                    session.cancelDialog("/schedule");
+                 }else{
+                     if(data.topScoringIntent.intent==='None'){
+                         console.log("Matched with intent NONE");
+                         session.send("I am sorry, I didn't understand your message, please try again");
+                         session.cancelDialog().beginDialog("/schedule");
+                         return;
+                     }
+                }
+
+                if(_.isEmpty(data.entities)){
+                    session.send("Sorry I couldn't find a date in your response");
+                }
+                let scheduleDate = builder.EntityRecognizer.findAllEntities(data.entities,'builtin.datetime.date');
+                let appointmentDate;
+                if(_.isEmpty(scheduleDate)){
+                    scheduleDate = builder.EntityRecognizer.findAllEntities(data.entities,'builtin.datetime.time');
+                    utilites.dateTimeDateMoments(scheduleDate,'builtin.datetime.time');
+                    appointmentDate = builder.EntityRecognizer.resolveTime(scheduleDate);
+                    console.log(appointmentDate);
+                }else {
+                    if (!appointmentDate) {
+                        //use custom parser
+                        console.log("Parsing entity with custom parser as I need date now");
+                        utilites.dateTimeDateMoments(scheduleDate);
+                        appointmentDate = builder.EntityRecognizer.resolveTime(scheduleDate,'builtin.datetime.date');
+                        console.log(appointmentDate);
+                    }
                 }
                 let scheduleTime = builder.EntityRecognizer.findAllEntities(data.entities,'builtin.datetime.time');
-                console.log(scheduleTime);
+                //console.log(scheduleTime);
                 let time =[];
+                let fromTime;
+                let toTime;
                 if(scheduleTime.length>1){
                     scheduleTime.forEach((entity)=>{
                         let data = [entity];
                         time.push(data);
                     });
+                     fromTime = builder.EntityRecognizer.resolveTime(time[0]);
+                     toTime =   builder.EntityRecognizer.resolveTime(time[1]);
+                }else{
+                    fromTime = builder.EntityRecognizer.resolveTime(scheduleTime);
+                    toTime = fromTime;
                 }
-                
-                let fromTime = builder.EntityRecognizer.resolveTime(time[0]);
-                let toTime =   builder.EntityRecognizer.resolveTime(time[1]);
-                //console.log(fromDate.toLocaleDateString());
-                console.log(fromTime.toLocaleString());
-                session.endDialog("Thank you, I have schduled your appointment on %s between %s to %s",
-                appoitmentDate.toLocaleDateString(),fromTime.toLocaleTimeString(),toTime.toLocaleTimeString());
+                let slots = utilites.getFreeslots(moment.utc(appointmentDate).format('YYYY-MM-DD'),moment.utc(fromTime).format('HHmm'),moment.utc(toTime).format('HHmm'));
+                session.dialogData.slots = slots;
+                builder.Prompts.choice(session, "Below are list of slots available",slots,{listStyle:3});
+                console.log("---from time---");
+                console.log(fromTime);
+
+                console.log("---To time---");
+                console.log(toTime);
+                console.log(moment.utc(fromTime).format('HHmm'));
+
             });
             
 
@@ -242,9 +312,23 @@ bot.dialog("/schedule", [
                 
         });*/
         session.sendTyping();
-        session.send("I am checking available slots for you.");
+
+        session.send("Let me analyse your response.");
+
+
         
         
+    },
+    (session,results)=>{
+        // Use this function to book a slot for the user.
+        if(results.response){
+            session.send("Thank you, I have booked an appotment for your on %s, at %s ", session.dialogData.slots[results.response.entity].date,session.dialogData.slots[results.response.entity].starttime );
+            session.userData.schduleDone=true;
+            session.send("Good bye");
+            session.endDialog();
+        }else {
+            session.send("Sorry I didn't understand you, kindly retry");
+        }
     }
 ]).cancelAction({
     matches : 'cancel',
@@ -255,32 +339,25 @@ bot.dialog("/schedule", [
 });
 
 bot.dialog("/cancelme", [
-    (session,args,next)=>{
-        if(args){
-            console.log("Received Arguments");
-            if(args.jumpstep) {
-                next();
-            }
-        }
-        else {
-            builder.Prompts.confirm(session, msgs.cancelPrompt, {listStyle: builder.ListStyle["button"]});
-        }
-    },
-    (session,results,args)=>{
-        console.log("Going to cancell current operations");
-        if(args.response){
-            session.clearDialogStack("Cancelled operation");
-            //session.cancelDialog("Operation Cancelled");
+    (session)=>{
 
-        }else{
-            console.log("Inside else");
+            builder.Prompts.confirm(session, msgs.cancelPrompt, {listStyle: builder.ListStyle["button"]});
+
+    },
+    (session,results)=>{
+        console.log("Going to cancell current operations");
+          if(results.response){
+              console.log(results.response);
             if(results.response){
                 console.log("Cancelling it");
+                session.send("Going to cancel current operations");
                 session.clearDialogStack("Cancelled operation");
+                session.endDialog();
 
             }else {
                 console.log("Cancelling in else of results");
-                session.cancelDialog("Canclled");
+                session.send("Aborting cancellation process.");
+                session.cancelDialog();
             }
          }
 
@@ -300,59 +377,44 @@ bot.dialog("/cancelme", [
 // Take the NXT account number and pin in this dialog and look up user account and authenticate user and set up his name in session;
 bot.dialog("/profile", [
     (session)=>{
-        session.send("Welcome to NXT Telecom, to serve you better,")
-        builder.Prompts.text(session,"Please provide your 8 git NXT account number");
+        session.sendTyping();
+        if(!session.userData.accountCheckfailed) {
+            builder.Prompts.number(session, msgs.profileDialog.welcomeChkAccount);
+        }else{
+            builder.Prompts.number(session,msgs.profileDialog.revalidateAccount);
+        }
     },
     (session,results,next)=>{
+        //Set User Account Number in memory
         session.userData.accountNo = results.response;
-        session.userData.name =  lookUPAccount(results.response).name;
+        //session.userData.name =  utilites.pullAccountDetails(results.response).name;
         next();
     },
     (session)=>{
-        builder.Prompts.number(session,"Kindly provide 4 digit account pin");
+        builder.Prompts.number(session,msgs.profileDialog.welcomPIN);
     },
     (session,results)=>{
+        session.sendTyping();
         session.userData.accountPin = results.response;
+        session.send(msgs.waitValidate);
         //call validate account number
-        session.send("Thank you, We are validating your account, please wait...");
-        session.send("Hi %s How may I help you today?",session.userData.name);
-        session.endDialog();
+        session.userData.user = utilites.pullAccountDetails(session.userData.accountNo,session.userData.accountPin);
+        console.log(session.userData.user);
+        session.sendTyping();
+        if(session.userData.user==null){
+            session.userData.accountCheckfailed = true;
+            session.send(msgs.profileDialog.validationFailed);
+            session.cancelDialog().beginDialog("/profile");
+        }else {
+            session.send("Hi %s How may I help you today?", session.userData.user.accountName);
+            session.endDialog();
+        }
     }
 ])
 
-/*
- *
- *  Look for an account details based on the number given by user
- * 
- * 
- */ 
-
-lookUPAccount = function(accountNo) {
-        // Lets keep dummy for demo else will be consuming rest end point 
-        return {
-            name:"Atin Singh"
-        } 
-
-}
 
 
 
-/*
- * Arbit function to check the issue in the system
- * 
- * 
- */ 
-
-pullschedule = function(accountNo) {
-        console.log("Fetching details for user %s", accountNo);
-        let user = null;
-        users.forEach((account)=>{
-            if(account.accountNumber===accountNo){
-                user = account;
-            }
-        })
-        return user;
-}
 
 /*
  *  Create offer Card based on the input from Pointis/
