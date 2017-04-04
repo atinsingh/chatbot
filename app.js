@@ -253,7 +253,9 @@ bot.dialog("/schedule", [
                     scheduleDate = builder.EntityRecognizer.findAllEntities(data.entities,'builtin.datetime.time');
 
                     appointmentDate = builder.EntityRecognizer.resolveTime(scheduleDate);
-                    if(!appointmentDate){
+                    console.log("Before normal function")
+                    console.log(appointmentDate);
+                    if(!appointmentDate||appointmentDate=='Invalid Date'){
                         utilites.dateTimeDateMoments(scheduleDate,'builtin.datetime.time');
                         appointmentDate = builder.EntityRecognizer.resolveTime(scheduleDate);
                     }

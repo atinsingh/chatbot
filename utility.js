@@ -90,6 +90,7 @@ module.exports.pullAccountDetails = function (accountNo, accountPIn) {
  */
 
  module.exports.dateTimeDateMoments = function(datetimeDateEntities, type){
+     console.log("Inside custom parsing function");
      _(datetimeDateEntities).map((datetimeDateEntity) => {
          let entiryType;
          if(type==='builtin.datetime.time'){
@@ -101,7 +102,10 @@ module.exports.pullAccountDetails = function (accountNo, accountPIn) {
          .replace("WXX-XX", 'W' + moment().week() + '-' + moment().day())
          .replace("WXX", 'W' + moment().week())
          .replace("XX", moment().month())
-         .replace("XX", moment().day()), moment.ISO_8601,true).format();
+         .replace("XX", moment().day())
+         .replace('TMO',"T8:00:00")
+         .replace('TAF',"T12:00:00")
+         .replace('TEV',"T15:00:00"), moment.ISO_8601,true).format();
          if(type==='builtin.datetime.time'){
              datetimeDateEntity.resolution.time = entiryType;
          }else{
