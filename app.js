@@ -252,13 +252,13 @@ bot.dialog("/schedule", [
                 if(_.isEmpty(scheduleDate)){
                     scheduleDate = builder.EntityRecognizer.findAllEntities(data.entities,'builtin.datetime.time');
 
-                    appointmentDate = builder.EntityRecognizer.resolveTime(scheduleDate);
-                    console.log("Before normal function")
-                    console.log(appointmentDate);
-                    if(!appointmentDate||appointmentDate=='Invalid Date'){
+                    //appointmentDate = builder.EntityRecognizer.resolveTime(scheduleDate);
+                    //console.log("Before normal function")
+                    //console.log(appointmentDate);
+                    //if(!appointmentDate||appointmentDate=='Invalid Date'){
                         utilites.dateTimeDateMoments(scheduleDate,'builtin.datetime.time');
                         appointmentDate = builder.EntityRecognizer.resolveTime(scheduleDate);
-                    }
+                    //}
                     console.log(appointmentDate);
                 }else {
                     if (!appointmentDate) {
