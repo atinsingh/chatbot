@@ -92,17 +92,16 @@ module.exports.pullAccountDetails = function (accountNo, accountPIn) {
  module.exports.dateTimeDateMoments = function(datetimeDateEntities, type){
      console.log("Inside custom parsing function");
      _(datetimeDateEntities).map((datetimeDateEntity) => {
-         let entiryType;
+         let entityType;
          if(type==='builtin.datetime.time'){
-             entiryType = datetimeDateEntity.resolution.time;
-             console.log("Now this is what I got"+entiryType);
-
+             console.log("Now this is what I got"+entityType);
+             entityType = datetimeDateEntity.resolution.time;
          }else{
-             entiryType = datetimeDateEntity.resolution.date;
+             entityType = datetimeDateEntity.resolution.date;
          }
          console.log("Parsing following entity");
-         console.log(entiryType);
-         entiryType=  moment.utc(entiryType.replace("XXXX", moment().year())
+         console.log(entityType);
+         entityType=  moment.utc(entityType.replace("XXXX", moment().year())
          .replace("WXX-XX", 'W' + moment().week() + '-' + moment().day())
          .replace("WXX", 'W' + moment().week())
          .replace("XX", moment().month()<9?"0"+moment().add(1, 'months').month():moment().add(1, 'months').month())
@@ -111,9 +110,9 @@ module.exports.pullAccountDetails = function (accountNo, accountPIn) {
          .replace('TAF',"T12:00:00")
          .replace('TEV',"T15:00:00"), moment.ISO_8601,true).format();
          if(type==='builtin.datetime.time'){
-             datetimeDateEntity.resolution.time = entiryType;
+             datetimeDateEntity.resolution.time = entityType;
          }else{
-             datetimeDateEntity.resolution.date = entiryType;
+             datetimeDateEntity.resolution.date = entityType;
          }
      });
      console.log("in parsing function");
