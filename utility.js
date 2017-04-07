@@ -91,21 +91,21 @@ module.exports.pullAccountDetails = function (accountNo, accountPIn) {
 
  module.exports.dateTimeDateMoments = function(datetimeDateEntities, type){
      _(datetimeDateEntities).map((datetimeDateEntity) => {
-         let entiryType;
+         let entityType;
          if(type==='builtin.datetime.time'){
-             entiryType = datetimeDateEntity.resolution.time;
+             entityType = datetimeDateEntity.resolution.time;
          }else{
-             entiryType = datetimeDateEntity.resolution.date;
+             entityType = datetimeDateEntity.resolution.date;
          }
-         entiryType=  moment.utc(entiryType.replace("XXXX", moment().year())
+         entityType=  moment.utc(entityType.replace("XXXX", moment().year())
          .replace("WXX-XX", 'W' + moment().week() + '-' + moment().day())
          .replace("WXX", 'W' + moment().week())
          .replace("XX", moment().month())
          .replace("XX", moment().day()), moment.ISO_8601,true).format();
          if(type==='builtin.datetime.time'){
-             datetimeDateEntity.resolution.time = entiryType;
+             datetimeDateEntity.resolution.time = entityType;
          }else{
-             datetimeDateEntity.resolution.date = entiryType;
+             datetimeDateEntity.resolution.date = entityType;
          }
      });
      console.log("in parsing function");
