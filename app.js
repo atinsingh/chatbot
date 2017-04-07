@@ -270,7 +270,15 @@ bot.dialog("/schedule", [
                     }
                 }
                 let scheduleTime = builder.EntityRecognizer.findAllEntities(data.entities,'builtin.datetime.time');
-                //console.log(scheduleTime);
+                console.log("Schedule time");
+                console.log(scheduleTime);
+                if(_.isEmpty(scheduleTime)){
+                    scheduleTime = builder.EntityRecognizer.findAllEntities(data.entities,'builtin.datetime.date');
+                    utilites.dateTimeDateMoments(scheduleTime,'builtin.datetime.date')
+                }else{
+                    utilites.dateTimeDateMoments(scheduleTime,'builtin.datetime.time')
+                }
+
                 let time =[];
                 let fromTime;
                 let toTime;
@@ -285,6 +293,8 @@ bot.dialog("/schedule", [
                     fromTime = builder.EntityRecognizer.resolveTime(scheduleTime);
                     toTime = fromTime;
                 }
+                console.log("From time");
+                console.log(fromTime);
                 let slots = utilites.getFreeslots(moment.utc(appointmentDate).format('YYYY-MM-DD'),moment.utc(fromTime).format('HHmm'),moment.utc(toTime).format('HHmm'));
                 session.dialogData.slots = slots;
                 builder.Prompts.choice(session, "Below are list of slots available, kindly click a slot to fix appointment",slots,{listStyle:3});

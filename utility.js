@@ -95,13 +95,17 @@ module.exports.pullAccountDetails = function (accountNo, accountPIn) {
          let entiryType;
          if(type==='builtin.datetime.time'){
              entiryType = datetimeDateEntity.resolution.time;
+             console.log("Now this is what I got"+entiryType);
+
          }else{
              entiryType = datetimeDateEntity.resolution.date;
          }
+         console.log("Parsing following entity");
+         console.log(entiryType);
          entiryType=  moment.utc(entiryType.replace("XXXX", moment().year())
          .replace("WXX-XX", 'W' + moment().week() + '-' + moment().day())
          .replace("WXX", 'W' + moment().week())
-         .replace("XX", moment().month())
+         .replace("XX", moment().month()<9?"0"+moment().add(1, 'months').month():moment().add(1, 'months').month())
          .replace("XX", moment().day())
          .replace('TMO',"T8:00:00")
          .replace('TAF',"T12:00:00")
