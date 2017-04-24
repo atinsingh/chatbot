@@ -7,6 +7,8 @@ const msgs  =  require("./messages.json");
 const utilites = require("./utility");
 const _ = require("underscore");
 const moment = require("moment");
+const path = require('path');
+const LOG = require("./log");
 
 //Replace this with config soon.
 let model = 'https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/899a5581-0c98-4e96-a389-13a6080eabf8?subscription-key=9c2eaf8becea42ef9a98c0d7e22ffa65&verbose=true&q=';
@@ -22,7 +24,8 @@ let model = 'https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/899a5581-
 let server = restify.createServer();
 let port = process.env.port||process.env.PORT||3978;
 server.listen(port,()=>{
-     console.log("Bot Server Started  at port %d ", port);
+     //console.info(Date() +"-"+ path.basename(__filename)+":"+"Bot Server Started  at port %d ", port);
+    LOG.info(path.basename(__filename),"server.listen", "Bot Server Started port "+port);
 });
 
 
@@ -230,83 +233,89 @@ bot.dialog("/schedule", [
 
     },
     (session,results,next)=>{
-          utilites.getLuisIntent(querystring.escape(results.response),(data)=>{
-                if(data.topScoringIntent.intent==='CancelOperation'){
+           utilites.getIntentAndSentiment(results.response,(data)=>{
+              console.log("Intent and Emotion Got from LUIS and BING ---");
+               console.log(data);
+           //});
+          // utilites.getLuisIntent(querystring.escape(results.response),(data)=>{
+          //    console.log(data);
+              if(data.luis.topScoringIntent.intent==='CancelOperation'){
                     //builder.Prompts.confirm(session,"Are you sure to cancel the appointment process ?");
                     session.beginDialog("/cancelme");
                     session.cancelDialog("/schedule");
                  }else{
-                     if(data.topScoringIntent.intent==='None'){
+                     if(data.luis.topScoringIntent.intent==='None'){
                          console.log("Matched with intent NONE");
                          session.send("I am sorry, I didn't understand your message, please try again");
                          session.cancelDialog().beginDialog("/schedule");
                          return;
                      }
                 }
-
-                if(_.isEmpty(data.entities)){
+                console.log("Entities lengh is +++++++++ %d", data.luis.entities.length);
+                if(data.luis.entities.length==0){
                     session.send("Sorry I couldn't find a date in your response");
-                }
-                let scheduleDate = builder.EntityRecognizer.findAllEntities(data.entities,'builtin.datetime.date');
-                let appointmentDate;
-                if(_.isEmpty(scheduleDate)){
-                    scheduleDate = builder.EntityRecognizer.findAllEntities(data.entities,'builtin.datetime.time');
-
-                    //appointmentDate = builder.EntityRecognizer.resolveTime(scheduleDate);
-                    //console.log("Before normal function")
-                    //console.log(appointmentDate);
-                    //if(!appointmentDate||appointmentDate=='Invalid Date'){
+                    session.send(msgs.askAppoitment);
+                }else{
+                    let scheduleDate = builder.EntityRecognizer.findAllEntities(data.luis.entities,'builtin.datetime.date');
+                    let appointmentDate;
+                    if(_.isEmpty(scheduleDate)){
+                        //the time from the entities returned by LUIS
+                        scheduleDate = builder.EntityRecognizer.findAllEntities(data.luis.entities,'builtin.datetime.time');
+                        //print entity for debug
+                        console.info("scheduleed date is %j", scheduleDate);
+                        //parse this entity using custom function as utility may be in the form as XXX-XXX-TMO
                         utilites.dateTimeDateMoments(scheduleDate,'builtin.datetime.time');
                         appointmentDate = builder.EntityRecognizer.resolveTime(scheduleDate);
-                    //}
-                    console.log(appointmentDate);
-                }else {
-                    if (!appointmentDate) {
-                        //use custom parser
-                        console.log("Parsing entity with custom parser as I need date now");
-                        utilites.dateTimeDateMoments(scheduleDate);
-                        appointmentDate = builder.EntityRecognizer.resolveTime(scheduleDate,'builtin.datetime.date');
+                        //}
                         console.log(appointmentDate);
+                    }else {
+                        if (!appointmentDate) {
+                            //use custom parser
+                            console.log("Parsing entity with custom parser as I need date now");
+                            utilites.dateTimeDateMoments(scheduleDate);
+                            appointmentDate = builder.EntityRecognizer.resolveTime(scheduleDate,'builtin.datetime.date');
+                            console.log(appointmentDate);
+                        }
                     }
-                }
-                let scheduleTime = builder.EntityRecognizer.findAllEntities(data.entities,'builtin.datetime.time');
-                console.log("Schedule time");
-                console.log(scheduleTime);
-                if(_.isEmpty(scheduleTime)){
-                    scheduleTime = builder.EntityRecognizer.findAllEntities(data.entities,'builtin.datetime.date');
-                    utilites.dateTimeDateMoments(scheduleTime,'builtin.datetime.date')
-                }else{
-                    utilites.dateTimeDateMoments(scheduleTime,'builtin.datetime.time')
-                }
+                    let scheduleTime = builder.EntityRecognizer.findAllEntities(data.luis.entities,'builtin.datetime.time');
+                    console.log("Schedule time");
+                    console.log(scheduleTime);
+                    if(_.isEmpty(scheduleTime)){
+                        scheduleTime = builder.EntityRecognizer.findAllEntities(data.luis.entities,'builtin.datetime.date');
+                        utilites.dateTimeDateMoments(scheduleTime,'builtin.datetime.date')
+                    }else{
+                        utilites.dateTimeDateMoments(scheduleTime,'builtin.datetime.time')
+                    }
 
-                let time =[];
-                let fromTime;
-                let toTime;
-                if(scheduleTime.length>1){
-                    scheduleTime.forEach((entity)=>{
-                        let data = [entity];
-                        time.push(data);
-                    });
-                     fromTime = builder.EntityRecognizer.resolveTime(time[0]);
-                     toTime =   builder.EntityRecognizer.resolveTime(time[1]);
-                }else{
-                    fromTime = builder.EntityRecognizer.resolveTime(scheduleTime);
-                    toTime = fromTime;
-                }
-                console.log("From time");
-                console.log(fromTime);
-                let slots = utilites.getFreeslots(moment.utc(appointmentDate).format('YYYY-MM-DD'),moment.utc(fromTime).format('HHmm'),moment.utc(toTime).format('HHmm'));
-                session.dialogData.slots = slots;
-                builder.Prompts.choice(session, "Below are list of slots available, kindly click a slot to fix appointment",slots,{listStyle:3});
-                console.log("---from time---");
-                console.log(fromTime);
+                    let time =[];
+                    let fromTime;
+                    let toTime;
+                    if(scheduleTime.length>1){
+                        scheduleTime.forEach((entity)=>{
+                            let data = [entity];
+                            time.push(data);
+                        });
+                         fromTime = builder.EntityRecognizer.resolveTime(time[0]);
+                         toTime =   builder.EntityRecognizer.resolveTime(time[1]);
+                    }else{
+                        fromTime = builder.EntityRecognizer.resolveTime(scheduleTime);
+                        toTime = fromTime;
+                    }
+                    console.log("From time");
+                    console.log(fromTime);
+                    let slots = utilites.getFreeslots(moment.utc(appointmentDate).format('YYYY-MM-DD'),moment.utc(fromTime).format('HHmm'),moment.utc(toTime).format('HHmm'));
+                    session.dialogData.slots = slots;
+                    builder.Prompts.choice(session, "Below are list of slots available, kindly click a slot to fix appointment",slots,{listStyle:3});
+                    console.log("---from time---");
+                    console.log(fromTime);
 
-                console.log("---To time---");
-                console.log(toTime);
-                console.log(moment.utc(fromTime).format('HHmm'));
+                    console.log("---To time---");
+                    console.log(toTime);
+                    console.log(moment.utc(fromTime).format('HHmm'));
+                }
 
             });
-            
+
 
         
         /*builder.LuisRecognizer.recognize(results.response,model, (err,intents,entities)=>{
@@ -488,7 +497,14 @@ function routeMessages(intent, session) {
             session.beginDialog("/schedule");
             break;
         case 'MissedTechnician' :
-            session.beginDialog("/missedtechnician")
+            session.beginDialog("/missedtechnician");
+            break;
+        case 'BeginConversation' :
+            session.beginDialog("/start");
+            break;
+        default :
+            session.beginDialog("/profile");
+
     }
 }
 
