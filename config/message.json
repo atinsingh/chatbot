@@ -1,0 +1,109 @@
+{  
+   //message when user is want to cancel the existing operation 
+    "cancelPrompt":[  
+      "Would you like to cancel the operation",
+      "Would you like me to cancel the current operation",
+      "Please repond with yes with if you would like to cancel"
+   ],
+   //when not able to match any intent from LUIS  
+     "notmatched":[  
+      "I am sorry I didn't understand that. Please try rephrasing the msg",
+      "I am sorry I am not able to understand your intent, kindly rephrase it",
+      "Not sure I understand that. My apologies! Please rephrase your request, so that I can help you",
+      "I am not able to understand your message :( , kidly rephrase it"
+   ],
+   //Bot's prompt for new appoitment schedule ' 
+     "askAppoitment":[  
+      "Kindly let me know when would you like to schedule your appointment. For example, say “next thursday between 2PM to 6 PM” ",
+      "Kindly let me know your preference for appoitment ?"
+   ],
+   // reply when user accepts NBO presented to him 
+     "nboAccept":[  
+      "Awesome! Let’s resolve the issue now",
+      "Thank you for accepting the offer, let me reschedule you now..",
+      "Great, let me add this offer to your account and proceed to schedule you."
+   ],
+   //reply from user declines the NBO  
+    "nboDecline":[  
+      "Sorry to hear that you didn't like our offer, let me find other options for you",
+      "Sorry we couldn't meet your expectations. Let me check if we can get another offer to you"
+   ],
+   // When user profile is with bot 
+    "welcomeBack":[  
+      "Welcome back Mr %s , How can I help you today",
+      "Hi %s, Welcome back, how can I help you",
+      "Hi %s , Good to see you again, how can I help you today",
+      "Hi %s , Good to see you again, how can I assit you today"
+   ],
+   "profileDialog":{  
+      //Welcome message to ask user account details 
+      "welcomeChkAccount":[  
+         "Welcome to Bell Canada! In order to serve you better,Please provide your 8 digit Bell Canada account number. Example - 90909090",
+         "Welcome to Bell Canada! Kindly provide your 8 digit account number in format 12345678 - ex 80808080",
+         "Weclome to NXT, In order to help you, I need your 8 digit account number with NXT, kindly reply back with account number"
+      ],
+      // Ask for user pin 
+      "welcomPIN":[  
+         "Thanks! Kindly provide your 4 digit pin. e.g. - 1234",
+         "Kindly provide your 4 digit numberic pin. ex-1234",
+         "Thanks, kindly provide your 4 digit pin . ex-1234"
+      ],
+      // when bot is validating account  
+      "waitValidate":[  
+         "Thank you. We are validating your account, please wait...",
+         "Let me verify your account, please wait....",
+         "Let me quickly match the information with our records..please wait..."
+      ],
+      // when account is not found in the system. 
+      "validationFailed":[  
+         "Sorry we couldn't find your account. Kindly check your account number and pin",
+         "Oops! We are not able to verify you with information provided. Kindly check your account and pin and try again",
+         "Sorry account number and pin given by you are not matched with our records, kindly try again..."
+      ],
+      //asking for account information again 
+      "revalidateAccount":[  
+         "Kindly provide your account 8 digit account number. For example - 80808080",
+         "Please type in your account 8 digit account number for ex - 90909090",
+         "Please provide your 8 digit NXT account number again, ex-12345678."
+      ],
+      // account found in the system and put a welcom prompt 
+      "validated":[  
+         "Thank you %s! How can I help you today? ",
+         "Great %s, how may I assist you today?",
+         "Great you are verified %s, how may I help you"
+      ]
+   },
+   "missedtechnicianDialog":{  
+      //When use says that technican didn't showed up' 
+    "step1Dialog":[  
+         "I am really sorry to hear that! Let me quickly check your account to identify the issue",
+         "Apologies for inconvenience, Let me quickly scan for your account to diagnos the issue",
+         "Kindly accept my sincere apology, let me verify the problem at our end.."
+      ],
+      //when problem is detected from DB 
+    "step2Dialog":[  
+         "Apologies, I found that you had an appointment on %s at %s but %s",
+         "Well I did found that you had an appointment on %s at %s but it couldn't proceed due to %s",
+         "Our records shows that you had an appointment on %s at %s but it couldn't proceed due to %s"
+      ],
+      //Presenting an NBO for angry customer 
+    "step3DialogOffer":[  
+         "To compensate your loss, we would like to offer following....",
+         "We’re sorry! Here’s something we think you’ll like: "
+      ],
+      // When NBO is accepts 
+    "step5OfferAcceptance":[  
+         "Thank you for accepting our offer, let me provision it for you right away..",
+         "Thanks for accepting the offer. We appreciate it!"
+      ],
+      //when scheduling starts 
+    "step6BeginSchedule":[  
+         "Let me quickly start appointment process to give you a quick appointment",
+         "Let’s begin booking an appointment for you."
+      ],
+      "step5OfferDecline":[  
+         "I am really sorry to hear that! Let’s reschedule your appointment right away.",
+         "No problem. Let me reschedule your appointment right away..."
+      ]
+   }
+}

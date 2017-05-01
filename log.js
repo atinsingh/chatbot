@@ -7,6 +7,12 @@ LOG = (function () {
     LOG.info = function (fileName, functionName, msgs) {
         console.log(color.blue("["+Date()+" ] " +fileName+"-"+functionName+" : "+msgs));
     }
+    LOG.debug = function(fileName,functionName,msg) {
+         console.log(color.yellow("["+Date()+" ] " +fileName+"-"+functionName+" : "+msgs));
+    }
+    LOG.error = function(fileName,functionName,msg) {
+         console.log(color.red("["+Date()+" ] " +fileName+"-"+functionName+" : "+msgs));
+    }
     return LOG;
 })();
 

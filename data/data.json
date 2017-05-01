@@ -1,0 +1,40 @@
+{  
+   "accounts":[  
+      {  
+         "accountNumber":"80808080",
+         "accountName":"Atin Singh",
+         "issuetag":"Technician couldn't contact",
+         "appointmentDate":"19 May 2017",
+         "appoitmentTime":"4:30 PM"
+      },
+      {  
+         "accountNumber":"90909090",
+         "accountName":"TM Forumn Catalyst",
+         "issuetag":"Customer was not reachable",
+         "appointmentDate":"10 May 2017",
+         "appoitmentTime":"02:30 PM"
+      }
+   ],
+   "appoitmentSlots":[  
+      {  
+         "date":"",
+         "starttime":"0900",
+         "endtime":"1100"
+      },
+      {  
+         "date":"",
+         "starttime":"1100",
+         "endtime":"1300"
+      },
+      {  
+         "date":"",
+         "starttime":"1400",
+         "endtime":"1600"
+      },
+      {  
+         "date":"",
+         "starttime":"1600",
+         "endtime":"1800"
+      }
+   ]
+}

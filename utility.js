@@ -1,9 +1,15 @@
+/**
+ * Utils contains the functions require by chat bot. 
+ * LUIS can BING and POINTIS calls are part of this file.
+ */
+
 const config = require("./appConfig.json");
 const accountData = require('./data.json');
 const moment = require("moment");
 const _ = require("underscore");
 const restify = require("restify");
 const querystring = require("querystring");
+const LOG = require("./log");
 
 var Utils;
 
@@ -11,6 +17,11 @@ Utils = (function () {
     function Utils() {
     };
 
+    /**
+     * Function to get intent and sentiment for the query
+     * @query is the text from user
+     * @callback is the function getIntentAndSentiment will call when data from api  is available
+     */
     Utils.getIntentAndSentiment = function (query, callback) {
         var data = {};
         Utils.getLuisIntent(query, (response)=> {
@@ -28,9 +39,12 @@ Utils = (function () {
 
     /*
      * Call MS LUIS to get the intent of the user.
+     * @query - string should use LUIS subcription Key and unescapped query string
+     * @callback function will be called when data set is avilable
+     * 
      */
     Utils.getLuisIntent = function (question, callback) {
-        var query = "?subscription-key=" + config.luisSubcriptionKey + "&verbose=true&q=" + querystring.escape(question);
+        var query = "?subscription-key=" + config.luisSubcriptionKey + "&verbose=true&spellCheck=true&q=" + querystring.escape(question);
         var options = {};
         options.url = config.luisURL;
         options.contentType ="application/json";
@@ -42,6 +56,11 @@ Utils = (function () {
         perFormRequest(options, "GET", query, callback);
     }
 
+    /**
+     * Function will call Microsoft Bing Text Analytics API to get the sentiment score
+     * @text - is the text that will be pass as document to this post method.
+     * @callback will be called when data set is available'
+     */
     Utils.getSentiment = function (text, callback) {
         let options = {};
         options.contentType ="application/json";
@@ -52,15 +71,17 @@ Utils = (function () {
         }
         options.url = config.sentiMentURL;
         //options.path = "sentiment"
+        // createDocument will create document object from the text string being passed.
         let docObject = this.createDocument(text);
         perFormRequest(options, "POST", docObject, callback);
 
     }
 
-    /*
-     * Go get post
-     *
-     */
+   /**
+    * perFormRequest will do a HTTP GET/POST call method on the method provided 
+    * method will create a new Restify client based on the option passeed, option should have a hostname 
+    * 
+    */
 
     function perFormRequest(options, method, request, callback) {
         //console.log(options);
@@ -96,7 +117,7 @@ Utils = (function () {
     }
 
     /*
-     * Utility function for Bing API
+     * Utility function to create a document object for Bing API
      */
     Utils.createDocument = function (text) {
         let textObj = {};
@@ -109,7 +130,7 @@ Utils = (function () {
         return JSON.stringify(documentObj);
     }
 
-    /*
+    /**
      * This function should be used to fetch account details, and problem associated with account.
      * function should take an account number a account pin.
      * for demo we will load data from JSON and ignore the PIN
@@ -128,12 +149,10 @@ Utils = (function () {
     }
 
 
-    /*
-     *
-     * Use custom entity recogniser if inbuilt fails
-     *
-     *
-     */
+   /**
+    * Custom datetime entity parser using momentjs 
+    *
+    */
 
     Utils.dateTimeDateMoments = function (datetimeDateEntities, type) {
         console.log("Inside custom parsing function");
@@ -192,6 +211,9 @@ Utils = (function () {
         return slots;
     }
 
+    /**
+     * Function to return the mood based on the sentiment score from Bing API;
+     */
     function FourEmotions(score) {
         if(score>=0.8){
             return "Happy";
@@ -207,15 +229,19 @@ Utils = (function () {
         }
     }
 
-    //
-    getNextBestAction = function (index,resultIndex,topic,mood) {
-        console.log("Sending data to Pontis: index"+index+" resultIndex:"+resultIndex+" topic:"+topic+" mood:"+mood);
-        var host = "52.58.126.193";
-        var port= "8080";
-        var endpoint = "/Pontis-WebDesktop/newxml";
+    /**
+     * Function will make a poitis call to get nextBestOffer to be displayed on chat.
+     */
+     Utils.getNextBestOffer = function (acccountNumber,topic,mood) {
+        console.log("Sending data to Pontis:  topic:"+topic+" mood:"+mood);
+        let options ={};
+        options.url = config.pointisURL;
+       // var host = "  ";
+        //var port= "8080";
+        //var endpoint = "/Pontis-WebDesktop/newxml";
         var method = "POST";
         var subscriberId = "";
-        if (globalVar.getCustomer() === "101"){
+        if (globalVar.getCustomer() === "808080"){
             subscriberId = "188885";
         }
         else if (globalVar.getCustomer() === "102"){
@@ -257,8 +283,8 @@ Utils = (function () {
             '<productInterest onchange="true" onselect="ProductInterestList">SIM ONLY</productInterest>'+
             '</eventData>'+
             '</PontisRequest>';
-
-        performRequest(host,port,endpoint, method, data,function (response){
+        
+        performRequest(options, method, data,function (response){
             data = '<PontisRequest username="user1" password="user1" service="GenEventProcessingService" operation="report" instance="ReportRequest">'+
                 '<subscriberIdData instance="SubscriberId">'+
                 '<subscriberId>'+subscriberId+'</subscriberId>'+
@@ -269,10 +295,10 @@ Utils = (function () {
                 '</eventData>'+
                 '</PontisRequest>';
 
-            performRequest(host,port,endpoint, method, data,function (response){
+            performRequest(options, method, data,function (response){
                 console.log("get response from Pontis: index"+index+" resultIndex:"+resultIndex+" topic:"+topic+" mood:"+mood);
                 console.log(response);
-                addOffers(index,resultIndex,response);
+                //addOffers(index,resultIndex,response);
             });
         });
     };

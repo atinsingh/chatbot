@@ -5,5 +5,6 @@
   "luisSubcriptionKey" :"9c2eaf8becea42ef9a98c0d7e22ffa65",
   "luisPath" :"/luis/v2.0/apps/899a5581-0c98-4e96-a389-13a6080eabf8",
   "sentiMentSubscriptionKey" : "48c529f8df3344bfb048b0c8cdc5b562",
-  "sentiMentURL" : "https://westus.api.cognitive.microsoft.com/text/analytics/v2.0/sentiment"
+  "sentiMentURL" : "https://westus.api.cognitive.microsoft.com/text/analytics/v2.0/sentiment",
+  "pointisURL" :"http://52.58.126.193:8080/Pontis-WebDesktop/newxml"
 }
