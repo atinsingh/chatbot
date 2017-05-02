@@ -11,9 +11,8 @@ const path = require('path');
 const LOG = require("./log");
 
 //Replace this with config soon.
-let model = 'https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/899a5581-0c98-4e96-a389-13a6080eabf8?subscription-key=9c2eaf8becea42ef9a98c0d7e22ffa65&verbose=true&q=';
 
-
+let model = config.luisURL+config.luisPath+"?subscription-key="+config.luisSubcriptionKey+"&verbose=true+&spellCheck=true&q=";
 
 /*
  * This section will create a simple restify server to listen to messages recived by bot
@@ -164,8 +163,10 @@ bot.dialog("/missedtechnician",[
                     session.sendTyping();
                     session.send(msgs.missedtechnicianDialog.step5OfferAcceptance);
                     session.sendTyping();
+                    session.sendTyping();
+                    session.sendTyping();          
                     session.send(msgs.missedtechnicianDialog.step6BeginSchedule);
-
+                    session.sendTyping();
                 session.beginDialog("/schedule");
             }else{
                 // Look for another offer for this guy.
@@ -174,7 +175,7 @@ bot.dialog("/missedtechnician",[
             }
     },
     (session)=>{
-        session.endDialog("Thank you for contacting NXT Telecom");
+        session.endDialog("Thank you for contacting Bell Canada");
     }
     
 ]).triggerAction({
@@ -234,8 +235,8 @@ bot.dialog("/schedule", [
     },
     (session,results,next)=>{
            utilites.getIntentAndSentiment(results.response,(data)=>{
-              console.log("Intent and Emotion Got from LUIS and BING ---");
-               console.log(data);
+              LOG.debug(path.basename(__filename),"/schedule", "Intent and Emotion Got from LUIS and BING ---");
+              LOG.debug(path.basename(__filename), "schedule",data);
            //});
           // utilites.getLuisIntent(querystring.escape(results.response),(data)=>{
           //    console.log(data);
@@ -262,24 +263,24 @@ bot.dialog("/schedule", [
                         //the time from the entities returned by LUIS
                         scheduleDate = builder.EntityRecognizer.findAllEntities(data.luis.entities,'builtin.datetime.time');
                         //print entity for debug
-                        console.info("scheduleed date is %j", scheduleDate);
+                        LOG.info("app.js", "schedule", "scheduleed date is"+scheduleDate);
                         //parse this entity using custom function as utility may be in the form as XXX-XXX-TMO
                         utilites.dateTimeDateMoments(scheduleDate,'builtin.datetime.time');
                         appointmentDate = builder.EntityRecognizer.resolveTime(scheduleDate);
                         //}
-                        console.log(appointmentDate);
+                        LOG.debug("app.js", "schedule", "appoitment date is"+ appointmentDate);
                     }else {
                         if (!appointmentDate) {
                             //use custom parser
-                            console.log("Parsing entity with custom parser as I need date now");
+                            LOG.debug("Parsing entity with custom parser as I need date now");
                             utilites.dateTimeDateMoments(scheduleDate);
                             appointmentDate = builder.EntityRecognizer.resolveTime(scheduleDate,'builtin.datetime.date');
-                            console.log(appointmentDate);
+                            LOG.debug("app.js", "schedule", "appoitment date is"+ appointmentDate);
                         }
                     }
                     let scheduleTime = builder.EntityRecognizer.findAllEntities(data.luis.entities,'builtin.datetime.time');
-                    console.log("Schedule time");
-                    console.log(scheduleTime);
+                   // console.log("Schedule time");
+                    LOG.debug("app.js", "schedule", "Schedule Time is "+ scheduleTime);
                     if(_.isEmpty(scheduleTime)){
                         scheduleTime = builder.EntityRecognizer.findAllEntities(data.luis.entities,'builtin.datetime.date');
                         utilites.dateTimeDateMoments(scheduleTime,'builtin.datetime.date')
@@ -301,17 +302,17 @@ bot.dialog("/schedule", [
                         fromTime = builder.EntityRecognizer.resolveTime(scheduleTime);
                         toTime = fromTime;
                     }
-                    console.log("From time");
-                    console.log(fromTime);
+                    //console.log("From time");
+                    //console.log(fromTime);
                     let slots = utilites.getFreeslots(moment.utc(appointmentDate).format('YYYY-MM-DD'),moment.utc(fromTime).format('HHmm'),moment.utc(toTime).format('HHmm'));
                     session.dialogData.slots = slots;
                     builder.Prompts.choice(session, "Below are list of slots available, kindly click a slot to fix appointment",slots,{listStyle:3});
-                    console.log("---from time---");
-                    console.log(fromTime);
+                    //console.log("---from time---");
+                    //console.log(fromTime);
 
-                    console.log("---To time---");
-                    console.log(toTime);
-                    console.log(moment.utc(fromTime).format('HHmm'));
+                    //console.log("---To time---");
+                    //console.log(toTime);
+                    //console.log(moment.utc(fromTime).format('HHmm'));
                 }
 
             });
@@ -395,9 +396,9 @@ bot.dialog("/cancelme", [
     (session,results)=>{
         console.log("Going to cancell current operations");
           if(results.response){
-              console.log(results.response);
+              //console.log(results.response);
             if(results.response){
-                console.log("Cancelling it");
+                //console.log("Cancelling it");
                 session.send("Going to cancel current operations");
                 session.clearDialogStack("Cancelled operation");
                 session.endDialog();

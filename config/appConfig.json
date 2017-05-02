@@ -2,9 +2,9 @@
   "appId": "250d74e1-4a54-43f6-a739-3f1252a80087",
   "appPassword": "LWZckeiddD9WBV6UGUQm7hv",
   "luisURL" :"https://westus.api.cognitive.microsoft.com",
-  "luisSubcriptionKey" :"9c2eaf8becea42ef9a98c0d7e22ffa65",
+  "luisSubcriptionKey" :"80ffd242ef9b4339893e13097e57ba8d",
   "luisPath" :"/luis/v2.0/apps/899a5581-0c98-4e96-a389-13a6080eabf8",
-  "sentiMentSubscriptionKey" : "48c529f8df3344bfb048b0c8cdc5b562",
+  "sentiMentSubscriptionKey" : "4454f0721d0e40d39cb2b77654f0b54d",
   "sentiMentURL" : "https://westus.api.cognitive.microsoft.com/text/analytics/v2.0/sentiment",
   "pointisURL" :"http://52.58.126.193:8080/Pontis-WebDesktop/newxml"
 }

@@ -3,8 +3,8 @@
  * LUIS can BING and POINTIS calls are part of this file.
  */
 
-const config = require("./appConfig.json");
-const accountData = require('./data.json');
+const config = require("./config/appConfig.json");
+const accountData = require('./data/data.json');
 const moment = require("moment");
 const _ = require("underscore");
 const restify = require("restify");

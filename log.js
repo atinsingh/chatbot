@@ -1,17 +1,32 @@
 const color = require("colors");
 var LOG;
+color.setTheme({
+    info : ['blue','bgYellow'],
+    debug :['magenta',"bgWhite"],
+    error :['red']
+
+});
 LOG = (function () {
     function LOG() {
 
     }
     LOG.info = function (fileName, functionName, msgs) {
-        console.log(color.blue("["+Date()+" ] " +fileName+"-"+functionName+" : "+msgs));
+        msgs = msgs||"";
+        functionName = functionName||"";
+        fileName = fileName||"";
+        console.log("["+Date()+" ] " +fileName+"-"+functionName+" : "+msgs+"".blue);
     }
-    LOG.debug = function(fileName,functionName,msg) {
-         console.log(color.yellow("["+Date()+" ] " +fileName+"-"+functionName+" : "+msgs));
+    LOG.debug = function(fileName,functionName,msgs) {
+        msgs = msgs||"";
+        functionName = functionName||"";
+        fileName = fileName||"";
+         console.log("["+Date()+" ] " +fileName+"-"+functionName+" : "+msgs+"".debug);
     }
-    LOG.error = function(fileName,functionName,msg) {
-         console.log(color.red("["+Date()+" ] " +fileName+"-"+functionName+" : "+msgs));
+    LOG.error = function(fileName,functionName,msgs) {
+        msgs = msgs||"";
+        functionName = functionName||"";
+        fileName = fileName||"";
+         console.log("["+Date()+" ] " +fileName+"-"+functionName+" : "+msgs+"".error);
     }
     return LOG;
 })();
