@@ -34,7 +34,7 @@
       "welcomeChkAccount":[  
          "Welcome to Bell Canada! In order to serve you better,Please provide your 8 digit Bell Canada account number. Example - 90909090",
          "Welcome to Bell Canada! Kindly provide your 8 digit account number in format 12345678 - ex 80808080",
-         "Weclome to NXT, In order to help you, I need your 8 digit account number with NXT, kindly reply back with account number"
+         "Weclome to Bell Canada, In order to help you, I need your 8 digit account number with Bell Canada, kindly reply back with account number"
       ],
       "welcomPIN":[  
          "Thanks! Kindly provide your 4 digit pin. e.g. - 1234",
@@ -54,7 +54,7 @@
       "revalidateAccount":[  
          "Kindly provide your account 8 digit account number. For example - 80808080",
          "Please type in your account 8 digit account number for ex - 90909090",
-         "Please provide your 8 digit NXT account number again, ex-12345678."
+         "Please provide your 8 digit Bell Canada account number again, ex-12345678."
       ],
       "validated":[  
          "Thank you %s! How can I help you today? ",
