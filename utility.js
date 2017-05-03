@@ -22,15 +22,19 @@ Utils = (function () {
      * @query is the text from user
      * @callback is the function getIntentAndSentiment will call when data from api  is available
      */
-    Utils.getIntentAndSentiment = function (query, callback) {
+    Utils.getIntentAndSentiment = (query, callback) => {
         var data = {};
         Utils.getLuisIntent(query, (response)=> {
             data.luis = response;
+            data.intent = response.topScoringIntent.intent;
             Utils.getSentiment(query,(response)=>{
                 data.bing = response;
+                data.sentiment = FourEmotions(response.documents[0].score);
+                data.sentimentScore = response.documents[0].score;
                 console.log("Got Sentiment and Intent");
                 console.log(JSON.stringify(data));
                 callback(data);
+                
             });
 
         });
@@ -43,7 +47,7 @@ Utils = (function () {
      * @callback function will be called when data set is avilable
      * 
      */
-    Utils.getLuisIntent = function (question, callback) {
+    Utils.getLuisIntent =  (question, callback) => {
         var query = "?subscription-key=" + config.luisSubcriptionKey + "&verbose=true&spellCheck=true&q=" + querystring.escape(question);
         var options = {};
         options.url = config.luisURL;
@@ -61,7 +65,7 @@ Utils = (function () {
      * @text - is the text that will be pass as document to this post method.
      * @callback will be called when data set is available'
      */
-    Utils.getSentiment = function (text, callback) {
+    Utils.getSentiment = (text, callback) => {
         let options = {};
         options.contentType ="application/json";
         options.headers = {
@@ -72,7 +76,7 @@ Utils = (function () {
         options.url = config.sentiMentURL;
         //options.path = "sentiment"
         // createDocument will create document object from the text string being passed.
-        let docObject = this.createDocument(text);
+        let docObject = CreateDocument(text);
         perFormRequest(options, "POST", docObject, callback);
 
     }
@@ -83,7 +87,7 @@ Utils = (function () {
     * 
     */
 
-    function perFormRequest(options, method, request, callback) {
+    perFormRequest = (options, method, request, callback) => {
         //console.log(options);
         let client = restify.createStringClient(options);
         if (method === 'GET') {
@@ -106,10 +110,7 @@ Utils = (function () {
                     console.log(err);
                     return;
                 }
-                console.log('%d -> %j', res.statusCode, res.headers);
-                console.log('%s', data);
                 client.close();
-                console.log("BING RESPONSE");
                 callback(JSON.parse(data));
             });
         }
@@ -119,7 +120,7 @@ Utils = (function () {
     /*
      * Utility function to create a document object for Bing API
      */
-    Utils.createDocument = function (text) {
+   CreateDocument = (text) => {
         let textObj = {};
         textObj.language = 'en';
         textObj.id = '1';
@@ -136,7 +137,7 @@ Utils = (function () {
      * for demo we will load data from JSON and ignore the PIN
      */
 
-    Utils.pullAccountDetails = function (accountNo, accountPIn) {
+    Utils.pullAccountDetails =  (accountNo, accountPIn) => {
         console.log("Fetching details for account %s", accountNo);
         let user = null;
         accountData.accounts.forEach((account) => {
@@ -154,7 +155,7 @@ Utils = (function () {
     *
     */
 
-    Utils.dateTimeDateMoments = function (datetimeDateEntities, type) {
+    Utils.dateTimeDateMoments = (datetimeDateEntities, type)=> {
         console.log("Inside custom parsing function");
         _(datetimeDateEntities).map((datetimeDateEntity) => {
             let entityType;
@@ -199,7 +200,7 @@ Utils = (function () {
      * like Address or ZIP code of the customer and line of business
      */
 
-    Utils.getFreeslots = function (scheduleDay, startTime, endTime) {
+    Utils.getFreeslots = (scheduleDay, startTime, endTime) => {
         let slots = {};
         console.log("StartTime " + startTime);
         accountData.appoitmentSlots.forEach((slot) => {
@@ -216,11 +217,11 @@ Utils = (function () {
     /**
      * Function to return the mood based on the sentiment score from Bing API;
      */
-    function FourEmotions(score) {
-        if(score>=0.8){
+     FourEmotions=(score)=> {
+        if(score>=0.92){
             return "Happy";
         }
-        if(score>=0.6&&score<0.8){
+        if(score>=0.6&&score<0.92){
             return "Practical";
         }
         if(score>=0.5&&score<0.6){
@@ -243,7 +244,7 @@ Utils = (function () {
         //var endpoint = "/Pontis-WebDesktop/newxml";
         var method = "POST";
         var subscriberId = "";
-        if (globalVar.getCustomer() === "808080"){
+        if (globalVar.getCustomer() === "101"){
             subscriberId = "188885";
         }
         else if (globalVar.getCustomer() === "102"){

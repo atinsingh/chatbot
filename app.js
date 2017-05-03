@@ -54,8 +54,9 @@ server.post("/api/messages",connectionConfiguration.listen());
  *
  */
 
-let recognizer = new builder.LuisRecognizer(model);
+//let recognizer = new builder.LuisRecognizer(model);
 
+/*
 let dialog = new builder.IntentDialog({
     recognizers :[recognizer]
 });
@@ -71,7 +72,21 @@ dialog.matches('ScheduleTechnician','/schedule');
 dialog.matches('CancelOperation','/cancelme');
 dialog.onDefault(builder.DialogAction.send(msgs.notmatched));
 
+*/
 
+//check dialog and sentiment for each dialoag.
+
+bot.dialog("/", [ (session)=>{
+        //console.log(session);
+        if(session.message){
+            LOG.info(session.message.text);
+            utilites.getIntentAndSentiment(session.message.text,(data)=>{
+                console.log(data);
+            });
+        }
+        session.send("Hello There!");
+    }]
+)
 
 
 
@@ -82,15 +97,15 @@ dialog.onDefault(builder.DialogAction.send(msgs.notmatched));
  * 
  */  
 
-dialog.onBegin(
-    (session, args, next) => {
-     if(!session.userData.accountNo){
-         session.beginDialog("/profile");
-     }else{
-         next();
-     }
-    }
-);
+// dialog.onBegin(
+//     (session, args, next) => {
+//      if(!session.userData.accountNo){
+//          session.beginDialog("/profile");
+//      }else{
+//          next();
+//      }
+//     }
+// );
 
 
 /*
