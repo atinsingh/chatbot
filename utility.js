@@ -162,9 +162,11 @@ Utils = (function () {
                 entityType = datetimeDateEntity.resolution.time;
                 if(entityType==='TMO'){
                     entityType = 'XXXX-XX-XXTMO';
-                }else if(entityType=="TAF"){
+                }else
+                if(entityType=="TAF"){
                     entityType = 'XXXX-XX-XXTAF';
-                }else{
+                }else
+                if(entityType=="TEV"){
                     entityType = 'XXXX-XX-XXTEV';
                 }
             } else {
@@ -206,7 +208,7 @@ Utils = (function () {
                 slots[slot.date + "-" + slot.starttime] = slot;
             }
         });
-        console.log("Below are the slots I have identified");
+        console.log("Below are the slots I have identified for you");
         console.log(slots);
         return slots;
     }
