@@ -6,7 +6,7 @@
 const config = require("./config/appConfig.json");
 const accountData = require('./data/data.json');
 const moment = require("moment");
-const _ = require("underscore");
+const _ = require("lodash");
 const restify = require("restify");
 const querystring = require("querystring");
 const LOG = require("./log");
@@ -22,24 +22,22 @@ Utils = (function () {
      * @query is the text from user
      * @callback is the function getIntentAndSentiment will call when data from api  is available
      */
-    Utils.getIntentAndSentiment = (query, callback) => {
-        var data = {};
-        Utils.getLuisIntent(query, (response)=> {
-            data.luis = response;
-            data.intent = response.topScoringIntent.intent;
-            Utils.getSentiment(query,(response)=>{
-                data.bing = response;
-                data.sentiment = FourEmotions(response.documents[0].score);
-                data.sentimentScore = response.documents[0].score;
-                console.log("Got Sentiment and Intent");
-                console.log(JSON.stringify(data));
-                callback(data);
+    // Utils.getIntentAndSentiment = (query, callback) => {
+    //     var data = {};
+    //     Utils.getLuisIntent(query, (response)=> {
+    //         data.luis = response;
+    //         data.intent = response.topScoringIntent.intent;
+    //         Utils.getSentiment(query,(response)=>{
+    //             data.sentiment = response.sentiment;
+    //             data.sentimentScore = response.score;
+    //             LOG.debug("Sentiment and Intent",JSON.stringify(data));
+    //             callback(data);
                 
-            });
+    //         });
 
-        });
+    //     });
 
-    }
+    // }
 
     /*
      * Call MS LUIS to get the intent of the user.
@@ -47,18 +45,18 @@ Utils = (function () {
      * @callback function will be called when data set is avilable
      * 
      */
-    Utils.getLuisIntent =  (question, callback) => {
-        var query = "?subscription-key=" + config.luisSubcriptionKey + "&verbose=true&spellCheck=true&q=" + querystring.escape(question);
-        var options = {};
-        options.url = config.luisURL;
-        options.contentType ="application/json";
-        options.type = options.type || "json";
-        options.path = config.luisPath + query;
-        options.headers = {
-            Accept: "application/json"
-        };
-        perFormRequest(options, "GET", query, callback);
-    }
+    // Utils.getLuisIntent =  (question, callback) => {
+    //     var query = "?subscription-key=" + config.luisSubcriptionKey + "&verbose=true&spellCheck=true&q=" + querystring.escape(question);
+    //     var options = {};
+    //     options.url = config.luisURL;
+    //     options.contentType ="application/json";
+    //     options.type = options.type || "json";
+    //     options.path = config.luisPath + query;
+    //     options.headers = {
+    //         Accept: "application/json"
+    //     };
+    //     perFormRequest(options, "GET", query, callback);
+    // }
 
     /**
      * Function will call Microsoft Bing Text Analytics API to get the sentiment score
@@ -66,6 +64,7 @@ Utils = (function () {
      * @callback will be called when data set is available'
      */
     Utils.getSentiment = (text, callback) => {
+        LOG.info("Calling Bing for Sentiment - text "+text);
         let options = {};
         options.contentType ="application/json";
         options.headers = {
@@ -77,7 +76,13 @@ Utils = (function () {
         //options.path = "sentiment"
         // createDocument will create document object from the text string being passed.
         let docObject = CreateDocument(text);
-        perFormRequest(options, "POST", docObject, callback);
+        let sentiment = {};
+        perFormRequest(options, "POST", docObject,(response)=>{
+            LOG.debug("Sentiment from Bing -", sentiment);
+            sentiment.sentiment = FourEmotions(response.documents[0].score);
+            sentiment.score = response.documents[0].score;
+            callback(sentiment);
+        } );
 
     }
 
@@ -104,7 +109,6 @@ Utils = (function () {
             });
 
         } else {
-            console.log("Going to make call to BING now");
             client.post(options,request, (err, req, res, data) => {
                 if(err){
                     console.log(err);
@@ -119,6 +123,7 @@ Utils = (function () {
 
     /*
      * Utility function to create a document object for Bing API
+     * Since I am always going to use single document so keeping ID - 1 always.
      */
    CreateDocument = (text) => {
         let textObj = {};
@@ -145,7 +150,7 @@ Utils = (function () {
                 user = account;
             }
         })
-        console.log("Found user details %j", user);
+        LOG.debug("Found user details :", user);
         return user;
     }
 
@@ -156,8 +161,8 @@ Utils = (function () {
     */
 
     Utils.dateTimeDateMoments = (datetimeDateEntities, type)=> {
-        console.log("Inside custom parsing function");
-        _(datetimeDateEntities).map((datetimeDateEntity) => {
+        LOG.info("Inside custom parsing function");
+        _.mapValues(datetimeDateEntities, (datetimeDateEntity) => {
             let entityType;
             if (type === 'builtin.datetime.time') {
                 entityType = datetimeDateEntity.resolution.time;
@@ -173,8 +178,7 @@ Utils = (function () {
             } else {
                 entityType = datetimeDateEntity.resolution.date;
             }
-            console.log("Parsing following entity");
-            console.log(entityType);
+            LOG.debug("Parsing following entity", entityType);
             entityType = moment.utc(entityType.replace("XXXX", moment().year())
                 .replace("WXX-XX", 'W' + moment().week() + '-' + moment().day())
                 .replace("WXX", 'W' + moment().week())
@@ -189,7 +193,6 @@ Utils = (function () {
                 datetimeDateEntity.resolution.date = entityType;
             }
         });
-        console.log("in parsing function");
         console.log(datetimeDateEntities);
 
     }
@@ -201,16 +204,23 @@ Utils = (function () {
      */
 
     Utils.getFreeslots = (scheduleDay, startTime, endTime) => {
+        //for demo discard the date;
+        scheduleDay = moment.utc(scheduleDay).format('YYYY-MM-DD');
+        startTime = startTime||"0800";// in case I am not getting any startTime, I will start with first slot
         let slots = {};
-        console.log("StartTime " + startTime);
+        LOG.debug("StartTime " ,  startTime);
+        LOG.debug("Date " ,  scheduleDay);
+        LOG.error("StartTime converted one ",moment.utc(startTime).format("HH:mm A"));
+
         accountData.appoitmentSlots.forEach((slot) => {
-            if (slot.starttime >= startTime) {
+            LOG.error("Coming from DB ",moment(slot.starttime,"hhmm").format("HHmm"));
+            if (moment(slot.starttime,"hhmm").format("HH:mm")>moment.utc(startTime).format("HHmm")) {
                 slot.date = scheduleDay;
-                slots[slot.date + "-" + slot.starttime] = slot;
+                LOG.debug(slot.date +"T"+ moment(slot.starttime,"hhmm").format("HH:mm"));
+                slots[moment(slot.date +"T"+ moment(slot.starttime,"hhmm").format("HH:mm")).format('YYYY-MM-DD HH:mm A')] = slot;
             }
         });
-        console.log("Below are the slots I have identified for you");
-        console.log(slots);
+        LOG.debug("Below are the slots I have identified for you", JSON.stringify(slots));
         return slots;
     }
 
@@ -228,37 +238,40 @@ Utils = (function () {
             return "Sad";
         }
         if(score<0.4){
-            return "Sad";
+            return "Anger";
         }
     }
 
     /**
      * Function will make a poitis call to get nextBestOffer to be displayed on chat.
      */
-     Utils.getNextBestOffer = function (acccountNumber,topic,mood) {
-        console.log("Sending data to Pontis:  topic:"+topic+" mood:"+mood);
-        let options ={};
-        options.url = config.pointisURL;
+     Utils.getNextBestOffer =  (acccountNumber,topic,mood)=> {
+         LOG.info("Sending data to Pontis:  topic:"+topic+" mood:"+mood);
+         let options ={};
+         options.url = config.pointisURL;
        // var host = "  ";
         //var port= "8080";
         //var endpoint = "/Pontis-WebDesktop/newxml";
-        var method = "POST";
-        var subscriberId = "";
-        if (globalVar.getCustomer() === "101"){
-            subscriberId = "188885";
-        }
-        else if (globalVar.getCustomer() === "102"){
-            subscriberId = "188886";
-        }
-        else if (globalVar.getCustomer() === "103"){
-            subscriberId = "188887";
-        }
-        else if (globalVar.getCustomer() === "104"){
-            subscriberId = "188888";
-        }
-        else{
-            subscriberId = "188889";
-        }
+
+         var method = "POST";
+         let account = Utils.pullAccountDetails(Number(acccountNumber),"1234");
+         let subscriberId = account.subscriberId;
+
+        // if (globalVar.getCustomer() === "101"){
+        //     subscriberId = "188885";
+        // }
+        // else if (globalVar.getCustomer() === "102"){
+        //     subscriberId = "188886";
+        // }
+        // else if (globalVar.getCustomer() === "103"){
+        //     subscriberId = "188887";
+        // }
+        // else if (globalVar.getCustomer() === "104"){
+        //     subscriberId = "188888";
+        // }
+        // else{
+        //     subscriberId = "188889";
+        // }
         var sentiment = "";
         if (mood === "Sadness"){
             sentiment="Sad";
@@ -276,34 +289,45 @@ Utils = (function () {
             sentiment="Neutral";
         }
 
-        var data = '<PontisRequest username="user1" password="user1" service="GenEventProcessingService" operation="report" instance="ReportRequest">'+
-            '<subscriberIdData instance="SubscriberId">'+
-            '<subscriberId>'+subscriberId+'</subscriberId>'+
-            '</subscriberIdData>'+
-            '<eventData instance="SubscriberUpdateEvent">'+
-            '<contactReason onchange="true" onselect="ContactReasons">'+topic+'</contactReason>'+
-            '<customerSentiment onchange="true" onselect="CustomerSentiments">'+sentiment+'</customerSentiment>'+
-            '<productInterest onchange="true" onselect="ProductInterestList">SIM ONLY</productInterest>'+
-            '</eventData>'+
-            '</PontisRequest>';
-        
-        performRequest(options, method, data,function (response){
-            data = '<PontisRequest username="user1" password="user1" service="GenEventProcessingService" operation="report" instance="ReportRequest">'+
-                '<subscriberIdData instance="SubscriberId">'+
-                '<subscriberId>'+subscriberId+'</subscriberId>'+
-                '</subscriberIdData>'+
-                '<eventData instance="OODInboundGetMenuEvent">'+
-                '<channelId onchange="true" onselect="RealTimeInboundChannels">OODInboundMessageOODChannelCP</channelId>'+
-                '<isDefaultMenu onchange="true" onselect="Boolean">true</isDefaultMenu>'+
-                '</eventData>'+
-                '</PontisRequest>';
+         /**
+          * Temp code should be removed after pointis is working
+          */
 
-            performRequest(options, method, data,function (response){
-                console.log("get response from Pontis: index"+index+" resultIndex:"+resultIndex+" topic:"+topic+" mood:"+mood);
-                console.log(response);
-                //addOffers(index,resultIndex,response);
-            });
-        });
+       let offer =  _.filter(accountData.pointisOffers,(offer)=>{
+          //LOG.info("Before IF" ,JSON.stringify(offer));
+          return offer.mood===sentiment;
+        })
+        return offer;
+
+        // Enable will code for pointis call
+        // var data = '<PontisRequest username="user1" password="user1" service="GenEventProcessingService" operation="report" instance="ReportRequest">'+
+        //     '<subscriberIdData instance="SubscriberId">'+
+        //     '<subscriberId>'+subscriberId+'</subscriberId>'+
+        //     '</subscriberIdData>'+
+        //     '<eventData instance="SubscriberUpdateEvent">'+
+        //     '<contactReason onchange="true" onselect="ContactReasons">'+topic+'</contactReason>'+
+        //     '<customerSentiment onchange="true" onselect="CustomerSentiments">'+sentiment+'</customerSentiment>'+
+        //     '<productInterest onchange="true" onselect="ProductInterestList">SIM ONLY</productInterest>'+
+        //     '</eventData>'+
+        //     '</PontisRequest>';
+        //
+        // performRequest(options, method, data,function (response){
+        //     data = '<PontisRequest username="user1" password="user1" service="GenEventProcessingService" operation="report" instance="ReportRequest">'+
+        //         '<subscriberIdData instance="SubscriberId">'+
+        //         '<subscriberId>'+subscriberId+'</subscriberId>'+
+        //         '</subscriberIdData>'+
+        //         '<eventData instance="OODInboundGetMenuEvent">'+
+        //         '<channelId onchange="true" onselect="RealTimeInboundChannels">OODInboundMessageOODChannelCP</channelId>'+
+        //         '<isDefaultMenu onchange="true" onselect="Boolean">true</isDefaultMenu>'+
+        //         '</eventData>'+
+        //         '</PontisRequest>';
+        //
+        //     performRequest(options, method, data,function (response){
+        //         console.log("get response from Pontis: index"+index+" resultIndex:"+resultIndex+" topic:"+topic+" mood:"+mood);
+        //         console.log(response);
+        //
+        //     });
+        // });
     };
 
 

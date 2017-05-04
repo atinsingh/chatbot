@@ -1,41 +1,68 @@
-{  
-   "accounts":[  
-      {  
+{
+   "accounts":[
+      {
          "accountNumber":"80808080",
          "accountName":"Atin Singh",
          "issuetag":"Technician couldn't contact",
          "appointmentDate":"19 May 2017",
-         "appoitmentTime":"4:30 PM"
+         "appoitmentTime":"4:30 PM",
+         "subscriberId" :"188888"
       },
-      {  
+      {
          "accountNumber":"90909090",
          "accountName":"TM Forumn Catalyst",
          "issuetag":"Customer was not reachable",
          "appointmentDate":"10 May 2017",
          "appoitmentTime":"02:30 PM",
-         "subscriberId" : "188885"
+         "subscriberId" :"188888"
       }
    ],
-   "appoitmentSlots":[  
-      {  
+   "appoitmentSlots":[
+      {
+         "slot_id" : "1",
          "date":"",
          "starttime":"0900",
          "endtime":"1100"
       },
-      {  
+      {  "slot_id" : "2",
          "date":"",
          "starttime":"1100",
          "endtime":"1300"
       },
-      {  
+      {
+        "slot_id" : "3",
          "date":"",
          "starttime":"1400",
          "endtime":"1600"
       },
-      {  
+      {
+         "slot_id" : "4",
          "date":"",
          "starttime":"1600",
          "endtime":"1800"
       }
-   ]
+   ],
+   "pointisOffers" : [
+     {
+       "mood"           : "Happy",
+       "offer_tag"      : "10% off on VOD Charges",
+       "offer_details"  : "Enjoy 10% of your first bill for all VOD charges."
+     },
+     {
+       "mood"           : "Neutral",
+       "offer_tag"      : "15% off on VOD Charges",
+       "offer_details"  : "Enjoy 15% of your first bill for all VOD charges."
+     },
+     {
+       "mood"           : "Sad",
+       "offer_tag"      : "$20 VOD Coupon",
+       "offer_details"  : "Enjoy premium VOD content worth $20, redeemed immediately."
+     },
+     {
+       "mood"           : "Angry",
+       "offer_tag"      : "Free Activation & Installation",
+       "offer_details"  : "Your activation and installation charges of $120 will be waived off."
+     }
+
+  ]
 }

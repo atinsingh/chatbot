@@ -1,11 +1,6 @@
-const color = require("colors");
+const colors = require("colors");
 var LOG;
-color.setTheme({
-    info : ['blue','bgYellow'],
-    debug :['magenta',"bgWhite"],
-    error :['red']
 
-});
 LOG = (function () {
     function LOG() {
 
@@ -14,19 +9,19 @@ LOG = (function () {
         msgs = msgs||"";
         functionName = functionName||"";
         fileName = fileName||"";
-        console.log("["+Date()+" ] " +fileName+"-"+functionName+" : "+msgs+"".blue);
+        console.log(colors.blue("["+Date()+" ] ", fileName, "-", functionName , " : ", msgs));
     }
     LOG.debug = function(fileName,functionName,msgs) {
         msgs = msgs||"";
         functionName = functionName||"";
         fileName = fileName||"";
-         console.log("["+Date()+" ] " +fileName+"-"+functionName+" : "+msgs+"".debug);
+        console.log(colors.green("["+Date()+" ] ", fileName, "-", functionName , " : ", msgs));
     }
     LOG.error = function(fileName,functionName,msgs) {
         msgs = msgs||"";
         functionName = functionName||"";
         fileName = fileName||"";
-         console.log("["+Date()+" ] " +fileName+"-"+functionName+" : "+msgs+"".error);
+        console.log(colors.red("["+Date()+" ] ", fileName, "-", functionName , " : ", msgs));
     }
     return LOG;
 })();

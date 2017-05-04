@@ -1,17 +1,21 @@
-const restify =  require('restify');
-const builder = require('botbuilder');
-const querystring = require("querystring");
-const config = require('./config/appConfig.json');
-const users =  require("./data/data.json");
-const msgs  =  require("./config/messages.json");
-const utilites = require("./utility");
-const _ = require("underscore");
+/**
+ * This section should include all the dependencies for bot
+ */
+
+
+const restify =  require('restify'); // restify is needed for endpoint, alternatively express.js can also be used
+const builder = require('botbuilder'); //botbuilder sdk - Mandatory lib
+const config = require('./config/appConfig.json'); // chatbot configuration ex - LUIS url, Bing URL etc
+const users =  require("./data/data.json"); // Demo Data , can be removed when bot is fully integrated
+const msgs  =  require("./config/messages.json"); //Message array bot requires in demo.
+const UTILS = require("./utility");  // utlity function and api call 
+const _ = require("lodash"); // lodash is required for quick object & array utils.
 const moment = require("moment");
 const path = require('path');
 const LOG = require("./log");
 
-//Replace this with config soon.
 
+//LUIS Model to get the intents
 let model = config.luisURL+config.luisPath+"?subscription-key="+config.luisSubcriptionKey+"&verbose=true+&spellCheck=true&q=";
 
 /*
@@ -39,11 +43,13 @@ server.listen(port,()=>{
 let connectionConfiguration = new builder.ChatConnector({
     appId:config.appId,
     appPassword:config.appPassword,
-    autoBatchDelay:300
+    autoBatchDelay:200
 });
 
+//Create a new bot instance 
 let bot =  new builder.UniversalBot(connectionConfiguration);
 
+//create a new rest end point to listen the messages . 
 server.post("/api/messages",connectionConfiguration.listen());
 
 
@@ -54,9 +60,9 @@ server.post("/api/messages",connectionConfiguration.listen());
  *
  */
 
-//let recognizer = new builder.LuisRecognizer(model);
+let recognizer = new builder.LuisRecognizer(model);
 
-/*
+//create intent dialog
 let dialog = new builder.IntentDialog({
     recognizers :[recognizer]
 });
@@ -72,22 +78,6 @@ dialog.matches('ScheduleTechnician','/schedule');
 dialog.matches('CancelOperation','/cancelme');
 dialog.onDefault(builder.DialogAction.send(msgs.notmatched));
 
-*/
-
-//check dialog and sentiment for each dialoag.
-
-bot.dialog("/", [ (session)=>{
-        //console.log(session);
-        if(session.message){
-            LOG.info(session.message.text);
-            utilites.getIntentAndSentiment(session.message.text,(data)=>{
-                console.log(data);
-            });
-        }
-        session.send("Hello There!");
-    }]
-)
-
 
 
 /*
@@ -96,16 +86,16 @@ bot.dialog("/", [ (session)=>{
  * 
  * 
  */  
-
-// dialog.onBegin(
-//     (session, args, next) => {
-//      if(!session.userData.accountNo){
-//          session.beginDialog("/profile");
-//      }else{
-//          next();
-//      }
-//     }
-// );
+//
+dialog.onBegin(
+    (session, args, next) => {
+     if(!session.userData.accountNo){
+         session.beginDialog("/profile");
+     }else{
+         next();
+     }
+    }
+);
 
 
 /*
@@ -116,10 +106,10 @@ bot.dialog("/", [ (session)=>{
 bot.dialog("/start", [
     (session,args,next)=>{
         session.sendTyping();
-        if(!session.userData.name){
+        if(!session.userData.user){
             session.beginDialog("/profile");
         }else{
-        session.send(msgs.welcomeBack, session.userData.name);
+        session.send(msgs.welcomeBack, session.userData.user.accountName);
         session.cancelDialog();
         }
     }
@@ -135,26 +125,39 @@ bot.dialog("/start", [
  */
 
 bot.dialog("/missedtechnician",[
-    (session,results,next)=>{
+
+    (session,args,next)=>{
+        /**
+         * Session already have intent set by LUIS Recogniser, so we have to now fetch sentiment
+         * pull sentiment
+         */
+
         if(!session.userData.user){
             session.beginDialog("/profile");
         }else{
-            next();
+
+        //Get Sentiment what user is saying
+        UTILS.getSentiment(session.message.text, (data)=>{
+                args.sentiment = data;
+                next(args);
+        } );
+
         }
        },
-    (session,results,next)=>{
+    (session,args,next)=>{
+        console.log(args);
         session.userData.schduleDone=false;
         session.sendTyping();
         session.send(msgs.missedtechnicianDialog.step1Dialog);
         session.sendTyping();
         setTimeout(()=> {
-            let schedule = session.userData.user;
-            if (schedule !== null) {
+            let activeAccount = session.userData.user;
+            if (activeAccount !== null) {
                 // Call pointis to get the action;
-                session.send(msgs.missedtechnicianDialog.step2Dialog, schedule.appointmentDate, schedule.appoitmentTime, schedule.issuetag);
+                session.send(msgs.missedtechnicianDialog.step2Dialog, activeAccount.appointmentDate, activeAccount.appoitmentTime, activeAccount.issuetag);
                 session.sendTyping();
                 session.send(msgs.missedtechnicianDialog.step3DialogOffer);
-                next();
+                next(args);
 
             } else {
                 session.send("Sorry I couldn't pull your records, please provide your details again");
@@ -165,7 +168,7 @@ bot.dialog("/missedtechnician",[
     },
     (session,args,next)=>{
         session.sendTyping();
-        var msg = new builder.Message(session).addAttachment(createHeroCard());
+        var msg = new builder.Message(session).addAttachment(createHeroCard(session,args));
         builder.Prompts.choice(session, msg, "Accept|Decline");
      },
     (session,results, next)=>{
@@ -220,7 +223,7 @@ bot.dialog("/missedtechnician",[
  * 
  */ 
 bot.dialog("/schedule", [
-    (session,results,next)=>{
+    (session,args,next)=>{
         if(!session.userData.user){
             session.beginDialog("/profile");
         }else{
@@ -248,39 +251,47 @@ bot.dialog("/schedule", [
         }
 
     },
-    (session,results,next)=>{
-           utilites.getIntentAndSentiment(results.response,(data)=>{
+    (session,results,next)=> {
+
+        recognizer.recognize(session.toRecognizeContext(), (err, data)=> {
+
+            //check sentiment now
+            UTILS.getSentiment(session.message.text, (sentiment) => {
+                data.sentiment = sentiment;
+                next(data);
+            });
+        });
+    },
+    (session,args,next) => {
+              session.send("Let me analyse your response.");
               LOG.debug(path.basename(__filename),"/schedule", "Intent and Emotion Got from LUIS and BING ---");
-              LOG.debug(path.basename(__filename), "schedule",data);
-           //});
-          // utilites.getLuisIntent(querystring.escape(results.response),(data)=>{
-          //    console.log(data);
-              if(data.luis.topScoringIntent.intent==='CancelOperation'){
+              LOG.debug(path.basename(__filename), "schedule",JSON.stringify(args));
+              if(args.intent==='CancelOperation'){
                     //builder.Prompts.confirm(session,"Are you sure to cancel the appointment process ?");
                     session.beginDialog("/cancelme");
                     session.cancelDialog("/schedule");
                  }else{
-                     if(data.luis.topScoringIntent.intent==='None'){
-                         console.log("Matched with intent NONE");
+                     if(args.intent==='None'){
+                         LOG.error("Matched with intent NONE");
                          session.send("I am sorry, I didn't understand your message, please try again");
                          session.cancelDialog().beginDialog("/schedule");
                          return;
                      }
                 }
-                console.log("Entities lengh is +++++++++ %d", data.luis.entities.length);
-                if(data.luis.entities.length==0){
+                console.log("Entities lengh is +++++++++ %d", args.entities.length);
+                if(args.entities.length==0){
                     session.send("Sorry I couldn't find a date in your response");
                     session.send(msgs.askAppoitment);
                 }else{
-                    let scheduleDate = builder.EntityRecognizer.findAllEntities(data.luis.entities,'builtin.datetime.date');
+                    let scheduleDate = builder.EntityRecognizer.findAllEntities(args.entities,'builtin.datetime.date');
                     let appointmentDate;
                     if(_.isEmpty(scheduleDate)){
                         //the time from the entities returned by LUIS
-                        scheduleDate = builder.EntityRecognizer.findAllEntities(data.luis.entities,'builtin.datetime.time');
+                        scheduleDate = builder.EntityRecognizer.findAllEntities(args.entities,'builtin.datetime.time');
                         //print entity for debug
                         LOG.info("app.js", "schedule", "scheduleed date is"+scheduleDate);
                         //parse this entity using custom function as utility may be in the form as XXX-XXX-TMO
-                        utilites.dateTimeDateMoments(scheduleDate,'builtin.datetime.time');
+                        UTILS.dateTimeDateMoments(scheduleDate,'builtin.datetime.time');
                         appointmentDate = builder.EntityRecognizer.resolveTime(scheduleDate);
                         //}
                         LOG.debug("app.js", "schedule", "appoitment date is"+ appointmentDate);
@@ -288,19 +299,19 @@ bot.dialog("/schedule", [
                         if (!appointmentDate) {
                             //use custom parser
                             LOG.debug("Parsing entity with custom parser as I need date now");
-                            utilites.dateTimeDateMoments(scheduleDate);
+                            UTILS.dateTimeDateMoments(scheduleDate);
                             appointmentDate = builder.EntityRecognizer.resolveTime(scheduleDate,'builtin.datetime.date');
                             LOG.debug("app.js", "schedule", "appoitment date is"+ appointmentDate);
                         }
                     }
-                    let scheduleTime = builder.EntityRecognizer.findAllEntities(data.luis.entities,'builtin.datetime.time');
+                    let scheduleTime = builder.EntityRecognizer.findAllEntities(args.entities,'builtin.datetime.time');
                    // console.log("Schedule time");
                     LOG.debug("app.js", "schedule", "Schedule Time is "+ scheduleTime);
                     if(_.isEmpty(scheduleTime)){
-                        scheduleTime = builder.EntityRecognizer.findAllEntities(data.luis.entities,'builtin.datetime.date');
-                        utilites.dateTimeDateMoments(scheduleTime,'builtin.datetime.date')
+                        scheduleTime = builder.EntityRecognizer.findAllEntities(args,'builtin.datetime.date');
+                        UTILS.dateTimeDateMoments(scheduleTime,'builtin.datetime.date')
                     }else{
-                        utilites.dateTimeDateMoments(scheduleTime,'builtin.datetime.time')
+                        UTILS.dateTimeDateMoments(scheduleTime,'builtin.datetime.time')
                     }
 
                     let time =[];
@@ -319,9 +330,9 @@ bot.dialog("/schedule", [
                     }
                     //console.log("From time");
                     //console.log(fromTime);
-                    let slots = utilites.getFreeslots(moment.utc(appointmentDate).format('YYYY-MM-DD'),moment.utc(fromTime).format('HHmm'),moment.utc(toTime).format('HHmm'));
-                    session.dialogData.slots = slots;
-                    builder.Prompts.choice(session, "Below are list of slots available, kindly click a slot to fix appointment",slots,{listStyle:3});
+                    //let slots = 
+                    session.dialogData.slots = UTILS.getFreeslots(appointmentDate,fromTime,toTime);;
+                    builder.Prompts.choice(session, "Below are list of slots available, kindly click a slot to fix appointment",session.dialogData.slots,{listStyle:3});
                     //console.log("---from time---");
                     //console.log(fromTime);
 
@@ -330,41 +341,10 @@ bot.dialog("/schedule", [
                     //console.log(moment.utc(fromTime).format('HHmm'));
                 }
 
-            });
 
-
-        
-        /*builder.LuisRecognizer.recognize(results.response,model, (err,intents,entities)=>{
-                if(err){
-                    console.log("Some error occurred in calling LUIS");
-                }
-                console.log(intents);
-                console.log("==================");
-                console.log(entities);
-                let dateofAppoitment = builder.EntityRecognizer.findAllEntities(entities,"builtin.datetime.date");
-                let timeofAppoitment = builder.EntityRecognizer.findEntity(entities,"builtin.datetime.time");
-
-
-                //console.log("##################### "+timeofAppoitment.length);
-                let datetime;
-                let time;
-                if(dateofAppoitment){
-                        dateime = builder.EntityRecognizer.resolveTime(timeofAppoitment);
-                }
-                if(timeofAppoitment){
-                 time = builder.EntityRecognizer.parseTime(entities);
-                }
-                
-                console.log("#####################");
-                console.log(time);
-               // if(time.length>1){
-                    console.log("Your appoitment is fixed on %s at %s", dateime.toLocaleDateString(),dateime.toLocaleTimeString());
-                //}
-                
-        });*/
         session.sendTyping();
 
-        session.send("Let me analyse your response.");
+
 
 
         
@@ -376,7 +356,7 @@ bot.dialog("/schedule", [
             session.send("Thank you, I have booked an appotment for your on %s, at %s ", session.dialogData.slots[results.response.entity].date,session.dialogData.slots[results.response.entity].starttime );
 
             /*
-             * Temp code will be removed
+             * Temp code will be removed, update the data of new appointment;
              *
              */
 
@@ -451,7 +431,7 @@ bot.dialog("/profile", [
     (session,results,next)=>{
         //Set User Account Number in memory
         session.userData.accountNo = results.response;
-        //session.userData.name =  utilites.pullAccountDetails(results.response).name;
+        //session.userData.name =  UTILS.pullAccountDetails(results.response).name;
         next();
     },
     (session)=>{
@@ -462,8 +442,8 @@ bot.dialog("/profile", [
         session.userData.accountPin = results.response;
         session.send(msgs.waitValidate);
         //call validate account number
-        session.userData.user = utilites.pullAccountDetails(session.userData.accountNo,session.userData.accountPin);
-        console.log(session.userData.user);
+        session.userData.user = UTILS.pullAccountDetails(session.userData.accountNo,session.userData.accountPin);
+        LOG.info(session.userData.user);
         session.sendTyping();
         if(session.userData.user==null){
             session.userData.accountCheckfailed = true;
@@ -486,14 +466,31 @@ bot.dialog("/profile", [
  * 
  */ 
 
-function createHeroCard(session) {
-    return new builder.HeroCard(session)
+function createHeroCard(session, args) {
+
+    let defaultCard = new builder.HeroCard(session)
         .title('$20 VOD Coupon')
         .text('Enjoy the VOD content')
         .buttons([
             builder.CardAction.postBack(session,"Accept", "Accept"),
             builder.CardAction.postBack(session,"Decline", "Decline")
         ]);
+    if(!(_.isEmpty(args))){
+        LOG.debug("Got following argulement ", JSON.stringify(args));
+        let offer = UTILS.getNextBestOffer(session.userData.user.accountNumber,args.intent,args.sentiment.sentiment);
+        LOG.debug("Offer Returned from Pointis",JSON.stringify(offer));
+        if(!(_.isEmpty(offer))) {
+            defaultCard = new builder.HeroCard(session)
+                .title(offer[0].offer_tag)
+                .text(offer[0].offer_details)
+                .buttons([
+                    builder.CardAction.postBack(session,"Accept", "Accept"),
+                    builder.CardAction.postBack(session,"Decline", "Decline")
+                ]);
+        }
+    }
+    return defaultCard;
+
 }
 
 /*
@@ -502,27 +499,7 @@ function createHeroCard(session) {
  */
 
 
-function routeMessages(intent, session) {
-    console.log("I am routing message for intent "+intent);
-    switch (intent){
-        case 'CancelOperation' :
-            session.cancelDialog();
-            session.beginDialog("/cancel");
-            break;
-        case 'ScheduleTechnician' :
-            session.beginDialog("/schedule");
-            break;
-        case 'MissedTechnician' :
-            session.beginDialog("/missedtechnician");
-            break;
-        case 'BeginConversation' :
-            session.beginDialog("/start");
-            break;
-        default :
-            session.beginDialog("/profile");
 
-    }
-}
 
 /*
  * Have to call luis for intent and entities on each promt
@@ -530,4 +507,24 @@ function routeMessages(intent, session) {
  *
  */
 
+// function routeMessages(session,intentObj) {
+//     LOG.info("I am routing message for intent");
+//     LOG.info(intentObj);
+//     if (_.isMatch(intentObj.intent, "CancelOperation")) {
+//         // session.cancelDialog();
+//         session.beginDialog("/cancel");
+//     } else if (_.isMatch(intentObj.intent, "ScheduleTechnician")) {
+//         //session.cancelDialog();
+//         session.beginDialog("/schedule", intentObj);
+//     } else if (_.isMatch(intentObj.intent, "BeginConversation")) {
+//         //session.cancelDialog();
+//         session.beginDialog("/start");
+//     } else if (_.isMatch(intentObj.intent, "MissedTechnician")) {
+//         //session.cancelDialog();
+//         session.beginDialog("/missedtechnician" , JSON.parse(intentObj));
+//     } else {
+//         session.beginDialog("/profile");
+//     }
+
+// }
 

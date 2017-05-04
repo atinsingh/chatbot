@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="471ecb5c-9329-47e7-8f7f-d2c522521ee1" name="Default" comment="" />
+    <list default="true" id="471ecb5c-9329-47e7-8f7f-d2c522521ee1" name="Default" comment="">
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.gitingore" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/test.js" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app.js" afterPath="$PROJECT_DIR$/app.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/data.json" afterPath="$PROJECT_DIR$/data/data.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/log.js" afterPath="$PROJECT_DIR$/log.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/package.json" afterPath="$PROJECT_DIR$/package.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/utility.js" afterPath="$PROJECT_DIR$/utility.js" />
+    </list>
     <ignored path="chatbot.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -26,8 +35,8 @@
       <file leaf-file-name="app.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1155">
-              <caret line="77" column="0" selection-start-line="77" selection-start-column="0" selection-end-line="77" selection-end-column="0" />
+            <state relative-caret-position="105">
+              <caret line="280" column="17" selection-start-line="280" selection-start-column="17" selection-end-line="280" selection-end-column="17" />
               <folding />
             </state>
           </provider>
@@ -36,58 +45,52 @@
       <file leaf-file-name="log.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/log.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="105">
-              <caret line="7" column="87" selection-start-line="7" selection-start-column="87" selection-end-line="7" selection-end-column="87" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="config.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/config.js">
-          <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="30">
-              <caret line="2" column="15" selection-start-line="2" selection-start-column="4" selection-end-line="2" selection-end-column="15" />
+              <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="utility.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="utility.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/utility.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-520">
-              <caret line="214" column="51" selection-start-line="214" selection-start-column="51" selection-end-line="214" selection-end-column="51" />
-              <folding />
+            <state relative-caret-position="345">
+              <caret line="294" column="0" selection-start-line="294" selection-start-column="0" selection-end-line="294" selection-end-column="0" />
+              <folding>
+                <marker date="1493938944000" expanded="true" signature="428:12628" ph="{...}" />
+                <marker date="1493938944000" expanded="true" signature="465:668" ph="/** Function to get intent and sentiment for the query ...*/" />
+                <marker date="1493938944000" expanded="true" signature="7884:8535" ph="{...}" />
+                <marker date="1493938944000" expanded="true" signature="7939:8414" ph="{...}" />
+                <marker date="1493938944000" expanded="true" signature="8128:8404" ph="{...}" />
+                <marker date="1493938944000" expanded="true" signature="8541:8631" ph="/** Function to return the mood based on the sentiment score from Bing API; ...*/" />
+                <marker date="1493938944000" expanded="true" signature="8660:8940" ph="{...}" />
+                <marker date="1493938944000" expanded="true" signature="8685:8724" ph="{...}" />
+                <marker date="1493938944000" expanded="true" signature="8759:8802" ph="{...}" />
+                <marker date="1493938944000" expanded="true" signature="8836:8873" ph="{...}" />
+                <marker date="1493938944000" expanded="true" signature="8895:8934" ph="{...}" />
+                <marker date="1493938944000" expanded="true" signature="8946:9043" ph="/** Function will make a poitis call to get nextBestOffer to be displayed on chat. ...*/" />
+                <marker date="1493938944000" expanded="true" signature="9105:12605" ph="{...}" />
+                <marker date="1493938944000" expanded="true" signature="9256:9357" ph="//..." />
+                <marker date="1493938944000" expanded="true" signature="9528:10020" ph="//..." />
+                <marker date="1493938944000" expanded="true" signature="10080:10120" ph="{...}" />
+                <marker date="1493938944000" expanded="true" signature="10155:10197" ph="{...}" />
+                <marker date="1493938944000" expanded="true" signature="10236:10280" ph="{...}" />
+                <marker date="1493938944000" expanded="true" signature="10315:10357" ph="{...}" />
+                <marker date="1493938944000" expanded="true" signature="10371:10415" ph="{...}" />
+                <marker date="1493938944000" expanded="true" signature="10426:10507" ph="/** Temp code should be removed after pointis is working ...*/" />
+                <marker date="1493938944000" expanded="true" signature="10573:10683" ph="{...}" />
+                <marker date="1493938944000" expanded="true" signature="10716:12599" ph="//..." />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="appConfig.json" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/appConfig.json">
+      <file leaf-file-name="data.json" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/data/data.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="8" column="1" selection-start-line="8" selection-start-column="1" selection-end-line="8" selection-end-column="1" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="data.json" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/data.json">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-22">
-              <caret line="7" column="23" selection-start-line="7" selection-start-column="9" selection-end-line="7" selection-end-column="23" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="messages.json" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/messages.json">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="906">
-              <caret line="83" column="39" selection-start-line="83" selection-start-column="39" selection-end-line="83" selection-end-column="39" />
+            <state relative-caret-position="60">
+              <caret line="4" column="21" selection-start-line="4" selection-start-column="10" selection-end-line="4" selection-end-column="21" />
               <folding />
             </state>
           </provider>
@@ -96,25 +99,9 @@
       <file leaf-file-name="package.json" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/package.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
-              <folding>
-                <marker date="1492797128000" expanded="true" signature="0:354" ph="{&quot;name&quot;: &quot;chatbot&quot;...}" />
-                <marker date="1492797128000" expanded="true" signature="125:152" ph="{&quot;test&quot;: &quot;test.js&quot;...}" />
-                <marker date="1492797128000" expanded="true" signature="218:352" ph="{&quot;botbuilder&quot;: &quot;^3.7.0&quot;...}" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="luisdialog.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/luisdialog.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding>
-                <element signature="n#!!doc" expanded="true" />
-              </folding>
+            <state relative-caret-position="60">
+              <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -131,6 +118,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/utility.js" root0="FORCE_HIGHLIGHTING" />
+  </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
@@ -138,8 +128,10 @@
         <option value="$PROJECT_DIR$/data.json" />
         <option value="$PROJECT_DIR$/messages.json" />
         <option value="$PROJECT_DIR$/appConfig.json" />
-        <option value="$PROJECT_DIR$/utility.js" />
+        <option value="$PROJECT_DIR$/dialogs/schedule.js" />
         <option value="$PROJECT_DIR$/log.js" />
+        <option value="$PROJECT_DIR$/data/data.json" />
+        <option value="$PROJECT_DIR$/utility.js" />
         <option value="$PROJECT_DIR$/app.js" />
       </list>
     </option>
@@ -156,6 +148,22 @@
     <option name="y" value="23" />
     <option name="width" value="1280" />
     <option name="height" value="714" />
+  </component>
+  <component name="ProjectInspectionProfilesVisibleTreeState">
+    <entry key="Project Default">
+      <profile-state>
+        <expanded-state>
+          <State>
+            <id />
+          </State>
+        </expanded-state>
+        <selected-state>
+          <State>
+            <id>EJS</id>
+          </State>
+        </selected-state>
+      </profile-state>
+    </entry>
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -183,7 +191,6 @@
     </navigator>
     <panes>
       <pane id="Scope" />
-      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -202,8 +209,23 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="chatbot" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="chatbot" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="data" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -211,7 +233,7 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="HbShouldOpenHtmlAsHb" value="" />
-    <property name="settings.editor.selected.configurable" value="Settings.JavaScript" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
     <property name="js-jscs-nodeInterpreter" value="/usr/local/bin/node" />
     <property name="JavaScriptPreferStrict" value="false" />
@@ -291,11 +313,12 @@
       <workItem from="1491540013664" duration="15167000" />
       <workItem from="1492184300934" duration="1373000" />
       <workItem from="1492791584380" duration="7103000" />
+      <workItem from="1493838170317" duration="23883000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="69258000" />
+    <option name="totallyTimeSpent" value="93141000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1280" height="714" extended-state="0" />
@@ -303,41 +326,22 @@
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24609375" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32868218" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32868218" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
-    <layout-to-restore>
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-    </layout-to-restore>
   </component>
   <component name="Vcs.Log.UiProperties">
     <option name="RECENTLY_FILTERED_USER_GROUPS">
@@ -355,14 +359,112 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/app.js</url>
-          <line>145</line>
+          <line>224</line>
+          <properties />
+          <option name="timeStamp" value="2" />
         </line-breakpoint>
       </breakpoints>
-      <option name="time" value="1" />
+      <option name="time" value="3" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/app.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1155">
+          <caret line="77" column="0" selection-start-line="77" selection-start-column="0" selection-end-line="77" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/log.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" column="87" selection-start-line="7" selection-start-column="87" selection-end-line="7" selection-end-column="87" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" column="15" selection-start-line="2" selection-start-column="4" selection-end-line="2" selection-end-column="15" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utility.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <marker date="1493938944000" expanded="true" signature="428:12628" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="465:668" ph="/** Function to get intent and sentiment for the query ...*/" />
+            <marker date="1493938944000" expanded="true" signature="7884:8535" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="7939:8414" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="8128:8404" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="8541:8631" ph="/** Function to return the mood based on the sentiment score from Bing API; ...*/" />
+            <marker date="1493938944000" expanded="true" signature="8660:8940" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="8685:8724" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="8759:8802" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="8836:8873" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="8895:8934" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="8946:9043" ph="/** Function will make a poitis call to get nextBestOffer to be displayed on chat. ...*/" />
+            <marker date="1493938944000" expanded="true" signature="9105:12605" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="9256:9357" ph="//..." />
+            <marker date="1493938944000" expanded="true" signature="9528:10020" ph="//..." />
+            <marker date="1493938944000" expanded="true" signature="10080:10120" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="10155:10197" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="10236:10280" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="10315:10357" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="10371:10415" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="10426:10507" ph="/** Temp code should be removed after pointis is working ...*/" />
+            <marker date="1493938944000" expanded="true" signature="10573:10683" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="10716:12599" ph="//..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/appConfig.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="8" column="1" selection-start-line="8" selection-start-column="1" selection-end-line="8" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" column="23" selection-start-line="7" selection-start-column="9" selection-end-line="7" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/messages.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1245">
+          <caret line="83" column="39" selection-start-line="83" selection-start-column="39" selection-end-line="83" selection-end-column="39" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/luisdialog.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="4695">
@@ -383,7 +485,31 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+          <folding>
+            <marker date="1493938944000" expanded="true" signature="428:12628" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="465:668" ph="/** Function to get intent and sentiment for the query ...*/" />
+            <marker date="1493938944000" expanded="true" signature="7884:8535" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="7939:8414" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="8128:8404" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="8541:8631" ph="/** Function to return the mood based on the sentiment score from Bing API; ...*/" />
+            <marker date="1493938944000" expanded="true" signature="8660:8940" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="8685:8724" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="8759:8802" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="8836:8873" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="8895:8934" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="8946:9043" ph="/** Function will make a poitis call to get nextBestOffer to be displayed on chat. ...*/" />
+            <marker date="1493938944000" expanded="true" signature="9105:12605" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="9256:9357" ph="//..." />
+            <marker date="1493938944000" expanded="true" signature="9528:10020" ph="//..." />
+            <marker date="1493938944000" expanded="true" signature="10080:10120" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="10155:10197" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="10236:10280" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="10315:10357" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="10371:10415" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="10426:10507" ph="/** Temp code should be removed after pointis is working ...*/" />
+            <marker date="1493938944000" expanded="true" signature="10573:10683" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="10716:12599" ph="//..." />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -415,11 +541,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <marker date="1492797128000" expanded="true" signature="0:354" ph="{&quot;name&quot;: &quot;chatbot&quot;...}" />
-            <marker date="1492797128000" expanded="true" signature="125:152" ph="{&quot;test&quot;: &quot;test.js&quot;...}" />
-            <marker date="1492797128000" expanded="true" signature="218:352" ph="{&quot;botbuilder&quot;: &quot;^3.7.0&quot;...}" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -427,9 +549,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -470,7 +590,31 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1155">
           <caret line="77" column="47" selection-start-line="77" selection-start-column="47" selection-end-line="77" selection-end-column="47" />
-          <folding />
+          <folding>
+            <marker date="1493938944000" expanded="true" signature="428:12628" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="465:668" ph="/** Function to get intent and sentiment for the query ...*/" />
+            <marker date="1493938944000" expanded="true" signature="7884:8535" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="7939:8414" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="8128:8404" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="8541:8631" ph="/** Function to return the mood based on the sentiment score from Bing API; ...*/" />
+            <marker date="1493938944000" expanded="true" signature="8660:8940" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="8685:8724" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="8759:8802" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="8836:8873" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="8895:8934" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="8946:9043" ph="/** Function will make a poitis call to get nextBestOffer to be displayed on chat. ...*/" />
+            <marker date="1493938944000" expanded="true" signature="9105:12605" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="9256:9357" ph="//..." />
+            <marker date="1493938944000" expanded="true" signature="9528:10020" ph="//..." />
+            <marker date="1493938944000" expanded="true" signature="10080:10120" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="10155:10197" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="10236:10280" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="10315:10357" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="10371:10415" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="10426:10507" ph="/** Temp code should be removed after pointis is working ...*/" />
+            <marker date="1493938944000" expanded="true" signature="10573:10683" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="10716:12599" ph="//..." />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -510,7 +654,31 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="855">
           <caret line="57" column="1" selection-start-line="49" selection-start-column="0" selection-end-line="57" selection-end-column="1" />
-          <folding />
+          <folding>
+            <marker date="1493938944000" expanded="true" signature="428:12628" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="465:668" ph="/** Function to get intent and sentiment for the query ...*/" />
+            <marker date="1493938944000" expanded="true" signature="7884:8535" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="7939:8414" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="8128:8404" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="8541:8631" ph="/** Function to return the mood based on the sentiment score from Bing API; ...*/" />
+            <marker date="1493938944000" expanded="true" signature="8660:8940" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="8685:8724" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="8759:8802" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="8836:8873" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="8895:8934" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="8946:9043" ph="/** Function will make a poitis call to get nextBestOffer to be displayed on chat. ...*/" />
+            <marker date="1493938944000" expanded="true" signature="9105:12605" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="9256:9357" ph="//..." />
+            <marker date="1493938944000" expanded="true" signature="9528:10020" ph="//..." />
+            <marker date="1493938944000" expanded="true" signature="10080:10120" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="10155:10197" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="10236:10280" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="10315:10357" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="10371:10415" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="10426:10507" ph="/** Temp code should be removed after pointis is working ...*/" />
+            <marker date="1493938944000" expanded="true" signature="10573:10683" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="10716:12599" ph="//..." />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -534,11 +702,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <marker date="1492797128000" expanded="true" signature="0:354" ph="{&quot;name&quot;: &quot;chatbot&quot;...}" />
-            <marker date="1492797128000" expanded="true" signature="125:152" ph="{&quot;test&quot;: &quot;test.js&quot;...}" />
-            <marker date="1492797128000" expanded="true" signature="218:352" ph="{&quot;botbuilder&quot;: &quot;^3.7.0&quot;...}" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -546,29 +710,15 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/node_modules/appconfig.json" />
     <entry file="file://$PROJECT_DIR$/dialogs.js" />
-    <entry file="file://$PROJECT_DIR$/package.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
-          <folding>
-            <marker date="1492797128000" expanded="true" signature="0:354" ph="{&quot;name&quot;: &quot;chatbot&quot;...}" />
-            <marker date="1492797128000" expanded="true" signature="125:152" ph="{&quot;test&quot;: &quot;test.js&quot;...}" />
-            <marker date="1492797128000" expanded="true" signature="218:352" ph="{&quot;botbuilder&quot;: &quot;^3.7.0&quot;...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/messages.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="906">
+        <state relative-caret-position="1245">
           <caret line="83" column="39" selection-start-line="83" selection-start-column="39" selection-end-line="83" selection-end-column="39" />
           <folding />
         </state>
@@ -590,44 +740,90 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/log.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="7" column="87" selection-start-line="7" selection-start-column="87" selection-end-line="7" selection-end-column="87" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1155">
-          <caret line="77" column="0" selection-start-line="77" selection-start-column="0" selection-end-line="77" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/luisdialog.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/data.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-22">
+        <state relative-caret-position="105">
           <caret line="7" column="23" selection-start-line="7" selection-start-column="9" selection-end-line="7" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dialogs/schedule.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2925">
+          <caret line="195" column="0" selection-start-line="195" selection-start-column="0" selection-end-line="195" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/log.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/utility.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-520">
-          <caret line="214" column="51" selection-start-line="214" selection-start-column="51" selection-end-line="214" selection-end-column="51" />
+        <state relative-caret-position="345">
+          <caret line="294" column="0" selection-start-line="294" selection-start-column="0" selection-end-line="294" selection-end-column="0" />
+          <folding>
+            <marker date="1493938944000" expanded="true" signature="428:12628" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="465:668" ph="/** Function to get intent and sentiment for the query ...*/" />
+            <marker date="1493938944000" expanded="true" signature="7884:8535" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="7939:8414" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="8128:8404" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="8541:8631" ph="/** Function to return the mood based on the sentiment score from Bing API; ...*/" />
+            <marker date="1493938944000" expanded="true" signature="8660:8940" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="8685:8724" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="8759:8802" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="8836:8873" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="8895:8934" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="8946:9043" ph="/** Function will make a poitis call to get nextBestOffer to be displayed on chat. ...*/" />
+            <marker date="1493938944000" expanded="true" signature="9105:12605" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="9256:9357" ph="//..." />
+            <marker date="1493938944000" expanded="true" signature="9528:10020" ph="//..." />
+            <marker date="1493938944000" expanded="true" signature="10080:10120" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="10155:10197" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="10236:10280" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="10315:10357" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="10371:10415" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="10426:10507" ph="/** Temp code should be removed after pointis is working ...*/" />
+            <marker date="1493938944000" expanded="true" signature="10573:10683" ph="{...}" />
+            <marker date="1493938944000" expanded="true" signature="10716:12599" ph="//..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="280" column="17" selection-start-line="280" selection-start-column="17" selection-end-line="280" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/data.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="4" column="21" selection-start-line="4" selection-start-column="10" selection-end-line="4" selection-end-column="21" />
           <folding />
         </state>
       </provider>
