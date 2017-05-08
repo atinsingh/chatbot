@@ -1,4 +1,5 @@
-const colors = require("colors");
+"use strict";
+var colors = require("colors");
 var LOG;
 
 LOG = (function () {
