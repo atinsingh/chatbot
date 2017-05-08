@@ -92,7 +92,7 @@ Utils = function () {
      * 
      */
 
-    perFormRequest = function perFormRequest(options, method, request, callback) {
+     function perFormRequest(options, method, request, callback) {
         //console.log(options);
         var client = restify.createStringClient(options);
         if (method === 'GET') {
@@ -123,7 +123,7 @@ Utils = function () {
      * Utility function to create a document object for Bing API
      * Since I am always going to use single document so keeping ID - 1 always.
      */
-    CreateDocument = function CreateDocument(text) {
+    function CreateDocument(text) {
         var textObj = {};
         textObj.language = 'en';
         textObj.id = '1';
@@ -214,7 +214,7 @@ Utils = function () {
     /**
      * Function to return the mood based on the sentiment score from Bing API;
      */
-    FourEmotions = function FourEmotions(score) {
+   function FourEmotions(score) {
         if (score >= 0.92) {
             return "Happy";
         }

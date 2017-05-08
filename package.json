@@ -4,7 +4,8 @@
   "description": "TM Forum Catalyst Chat Bot",
   "main": "app.js",
   "scripts": {
-    "test": "test.js"
+    "test": "test.js",
+    "start": "node app.js"
   },
   "author": "Atin Singh",
   "license": "ISC",
