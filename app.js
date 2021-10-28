@@ -22,6 +22,7 @@ var model = config.luisURL + config.luisPath + "?subscription-key=" + config.lui
  * Port will be taken from env variable.
  *
  */
+var app = 'thsi is good'
 
 var server = restify.createServer();
 var port = process.env.port || process.env.PORT || 3978;
