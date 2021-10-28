@@ -15,6 +15,8 @@ var LOG = require("./log");
 
 var Utils;
 
+var utils = 'not good'
+
 Utils = function () {
     function Utils() {};
 
